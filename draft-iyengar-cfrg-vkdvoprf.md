@@ -1,7 +1,7 @@
 ---
-title: Verifiable Attribute Based Key Derivation for VOPRFs
+title: Verifiable Key Derivation for VOPRFs
 abbrev: "TODO - Abbreviation"
-docname: draft-iyengar-cfrg-abvoprf-latest
+docname: draft-iyengar-cfrg-vkdvoprf-latest
 category: info
 
 ipr: trust200902
