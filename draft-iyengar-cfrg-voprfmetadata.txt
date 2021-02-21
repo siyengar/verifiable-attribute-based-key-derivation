@@ -69,8 +69,9 @@ Table of Contents
      1.2.  Terminology
    2.  Preliminaries
    3.  Protocol
-     3.1.  Setup
-     3.2.  Other Context APIs
+     3.1.  Overview
+     3.2.  Setup
+     3.3.  Other Context APIs
    4.  Comparison with other approaches
      4.1.  Pairings
      4.2.  Regular key derivation
@@ -137,15 +138,17 @@ Table of Contents
 
 3.  Protocol
 
-   ## Overview A server first generates a main key pair "(skM, pkM)",
-   where "skM" is the servers main secret key and "pkM" is the servers
-   main public key.  Given public metadata "t", the server generates a
-   keypair specific to the metadata "t", "(skT, pkT) = PKGen(t, skM)",
-   where "skT" is the secret key for metadata "t" and "pkT" is its
-   public key.  Once a metadata specific keypair is available, the
-   server can be used to evaluate a "VOPRF(skT, x)", where "x" is the
-   input for the user.  When the VOPRF is in verifiable mode, the client
-   also receives a NIZK proof that "skT" is generated from "skM".
+3.1.  Overview
+
+   A server first generates a main key pair "(skM, pkM)", where "skM" is
+   the servers main secret key and "pkM" is the servers main public key.
+   Given public metadata "t", the server generates a keypair specific to
+   the metadata "t", "(skT, pkT) = PKGen(t, skM)", where "skT" is the
+   secret key for metadata "t" and "pkT" is its public key.  Once a
+   metadata specific keypair is available, the server can be used to
+   evaluate a "VOPRF(skT, x)", where "x" is the input for the user.
+   When the VOPRF is in verifiable mode, the client also receives a NIZK
+   proof that "skT" is generated from "skM".
 
    Client(pkM, input, metadata)        Server(skM, pkM, metadata)
   ----------------------------------------------------------
@@ -153,14 +156,14 @@ Table of Contents
 
                        blindedElement
                         ---------->
-         skT, pkT, pk_proof = PKGen(skM, metadata)
+         skT, pkT, pkProofs = PKGen(skM, metadata)
 
     evaluatedElement, proof = Evaluate(skT, pkT, blindedElement)
 
-                  evaluatedElement, pkT, proof, pk_proof
+                  evaluatedElement, pkT, proof, pkProofs
                         <----------
 
-    pk_verified = PKVerify(pkM, pkT, pk_proof)
+    pkVerified = PKVerify(pkM, pkT, pkProofs)
 
     output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
 
@@ -168,24 +171,24 @@ Table of Contents
    scheme in [I-D.irtf-cfrg-voprf] to be able to augment an existing
    VOPRF with public metadata.
 
-3.1.  Setup
+3.2.  Setup
 
    We augment the offline context setup phase phase of the VOPRF in
    [I-D.irtf-cfrg-voprf].  In this phase, both the client and server
    create a context used for executing the online phase of the protocol.
 
    Prior to this phase, the key pair ("skM", "pkM") should be generated
-   by using "MasterKeyGen(metadata_bits)".
+   by using "MasterKeyGen(metadataBits)".
 
-   def MasterKeyGen(metadata_bits):
+   def MasterKeyGen(metadataBits):
        skElements = []
        pkElements = []
        h = NewGroupGenerator()
        a0 = RandomScalar()
-       for i in range(metadata_bits):
+       for i in range(metadataBits):
            ai = RandomScalar()
            skElements.append(ai)
-       for i in range(metadata_bits):
+       for i in range(metadataBits):
            hi = h.ScalarMult(skElements[i])
            pkElements.append(hi)
        P0 = g.ScalarMult(a0)
@@ -193,7 +196,7 @@ Table of Contents
        pkM = (G, g, h, metadata_bits, P0, pkElements)
        return (skM, pkM)
 
-   "metadata_bits" here is the number of bits of metadata that are
+   "metadataBits" here is the number of bits of metadata that are
    required for the application of the VOPRF.  "MasterKeyGen" samples
    "n" scalar elements "a0, a1, ... an" from the group and a new
    generator "h".  Public parameters are calculated by performing scalar
@@ -203,27 +206,27 @@ Table of Contents
    protocol, the server executes "PKGen(skM, metadata)" to generate
    "skT" and the proof that "skT" is derived from "skM".
 
- def PKGen(metadata, skM, pkM):
-     pi = skM.a0
-     pis = []
-     key_bits = len(metadata)
-     for i in range(key_bits):
-         pi = pi * (skM[i] ^ metadata[i])
-         pis.append(pi)
-     skT = pi
-     pk_proof = GenProof(metadata, pis, pkM)
-     return (skT, pk_proof)
+   def PKGen(metadata, skM, pkM):
+       pi = skM.a0
+       pis = []
+       keyBits = len(metadata)
+       for i in range(keyBits):
+           pi = pi * (skM[i] ^ metadata[i])
+           pis.append(pi)
+       skT = pi
+       pkProofs = GenProofs(metadata, pis, pkM)
+       return (skT, pkProofs)
 
- def GenProof(metadata, pis, pkM):
-     num_proofs = len(pis)
-     proofs = []
-     previous_pi = pkM.P0
-     for i in range(num_proofs):
-         proof_i = DLEQ(pkM.h, pkM.h ^ metadata[i], previous_pi, pis[i])
-         proofs.append(proof_i)
-     return proofs
+   def GenProofs(metadata, pis, pkM):
+       numProofs = len(pis)
+       proofs = []
+       previousPi = pkM.P0
+       for i in range(numProofs):
+           proofi = DLEQ(pkM.h, pkM.h ^ metadata[i], previousPi, pis[i])
+           proofs.append(proofi)
+       return proofs
 
-3.2.  Other Context APIs
+3.3.  Other Context APIs
 
    We describe the changes needed to the other context APIs
 
