@@ -50,8 +50,7 @@ metadata.
 A VOPRF allows a client and server to evaluate a psuedo-random function
 `F(k, x)`, with secret key `k`, and input `x` without the client learning the
 key `k` and the server learning the input `x`.  Additionally in a VOPRF, the
-client can verify that the output was computed using the key `k` and not some
-other key.
+client can verify that the output was computed using the key `k`.
 
 One challenge in VOPRFs is to be able to bind public metadata to the output
 of the VOPRF while keeping the VOPRF both verifiable and oblivious.
