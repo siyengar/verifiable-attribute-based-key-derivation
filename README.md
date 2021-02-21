@@ -1,10 +1,10 @@
-# Verifiable Key Derivation for VOPRFs
+# Verifiable Oblivious Pseudo-Random Functions with Public Metadata
 
-This is the working area for the individual Internet-Draft, "Verifiable Key Derivation for VOPRFs".
+This is the working area for the individual Internet-Draft, "Verifiable Oblivious Pseudo-Random Functions with Public Metadata".
 
-* [Editor's Copy](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-vkdvoprf.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-iyengar-cfrg-vkdvoprf)
-* [Compare Editor's Copy to Individual Draft](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-vkdvoprf.diff)
+* [Editor's Copy](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-voprfmetadata.html)
+* [Individual Draft](https://tools.ietf.org/html/draft-iyengar-cfrg-voprfmetadata)
+* [Compare Editor's Copy to Individual Draft](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-voprfmetadata.diff)
 
 ## Building the Draft
 
