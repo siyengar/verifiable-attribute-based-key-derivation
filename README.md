@@ -2,9 +2,9 @@
 
 This is the working area for the individual Internet-Draft, "Verifiable Oblivious Pseudo-Random Functions with Public Metadata".
 
-* [Editor's Copy](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-voprfmetadata.html)
+* [Editor's Copy](https://siyengar.github.io/voprf-with-metadata/#go.draft-iyengar-cfrg-voprfmetadata.html)
 * [Individual Draft](https://tools.ietf.org/html/draft-iyengar-cfrg-voprfmetadata)
-* [Compare Editor's Copy to Individual Draft](https://siyengar.github.io/verifiable-attribute-based-key-derivation/#go.draft-iyengar-cfrg-voprfmetadata.diff)
+* [Compare Editor's Copy to Individual Draft](https://siyengar.github.io/voprf-with-metadata/#go.draft-iyengar-cfrg-voprfmetadata.diff)
 
 ## Building the Draft
 
@@ -21,4 +21,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/siyengar/verifiable-attribute-based-key-derivation/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/siyengar/voprf-with-metadata/blob/master/CONTRIBUTING.md).
