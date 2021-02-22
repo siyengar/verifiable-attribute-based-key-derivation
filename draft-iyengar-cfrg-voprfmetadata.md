@@ -116,8 +116,8 @@ This document depends on the following:
 - `GG`: A prime-order group implementing the API described in
   {{!I-D.irtf-cfrg-voprf}} as well as the additional APIs defined below in
   {{pog}}.
-- `Public Metadata`: The public metadata is defined as `n` bits. To represent
-  `b` values, an application could use `log b` bits.
+- `Public Metadata`: The public metadata is defined as an `n` bit vector. To
+  represent `b` values, an application could use `log b` bits.
 
 ## Prime-Order Group Dependency {#pog}
 
@@ -358,15 +358,21 @@ verified against the master key later.
 # Security Considerations
 
 ## Cryptographic security
-TODO: talk about how generating the public key binds the metadata to the final
-VOPRF evaluation.
 
-### Hardness assumptions
+The security properties of a VOPRF with public metadata are derived from the
+proof in {{PrivateStats}} that the VOPRF defined here is a PRF even after
+giving an adversary access to proofs from `PKGen`. The VOPRF defined in
+{{!I-D.irtf-cfrg-voprf}} when combined with attributes results in a PRF output
+of `PRF(skM, t, x) = a0 * a1 ... * an * H(x)`.
 
+### l-exponent Diffie Hellman assumption
+TODO: discuss l-exponent DH problem
 
+### Selective security vs full security
+TODO: discuss what selective security is and how to transform.
 
-## Selective security vs full security
-
+### Size of metadata
+TODO: discuss how size of metadata might affect security.
 
 # IANA Considerations
 
