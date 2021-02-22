@@ -83,8 +83,9 @@ Table of Contents
      5.2.  Partially oblivious PRF
    6.  Security Considerations
      6.1.  Cryptographic security
-       6.1.1.  Hardness assumptions
-     6.2.  Selective security vs full security
+       6.1.1.  l-exponent Diffie Hellman assumption
+       6.1.2.  Selective security vs full security
+       6.1.3.  Size of metadata
    7.  IANA Considerations
    8.  References
      8.1.  Normative References
@@ -156,8 +157,9 @@ Table of Contents
       [I-D.irtf-cfrg-voprf] as well as the additional APIs defined below
       in Section 2.1.
 
-   *  "Public Metadata": The public metadata is defined as "n" bits.  To
-      represent "b" values, an application could use "log b" bits.
+   *  "Public Metadata": The public metadata is defined as an "n" bit
+      vector.  To represent "b" values, an application could use "log b"
+      bits.
 
 2.1.  Prime-Order Group Dependency
 
@@ -403,12 +405,24 @@ def GenProofs(t, pis, skM, pkM):
 
 6.1.  Cryptographic security
 
-   TODO: talk about how generating the public key binds the metadata to
-   the final VOPRF evaluation.
+   The security properties of a VOPRF with public metadata are derived
+   from the proof in [PrivateStats] that the VOPRF defined here is a PRF
+   even after giving an adversary access to proofs from "PKGen".  The
+   VOPRF defined in [I-D.irtf-cfrg-voprf] when combined with attributes
+   results in a PRF output of "PRF(skM, t, x) = a0 * a1 ... * an *
+   H(x)".
 
-6.1.1.  Hardness assumptions
+6.1.1.  l-exponent Diffie Hellman assumption
 
-6.2.  Selective security vs full security
+   TODO: discuss l-exponent DH problem
+
+6.1.2.  Selective security vs full security
+
+   TODO: discuss what selective security is and how to transform.
+
+6.1.3.  Size of metadata
+
+   TODO: discuss how size of metadata might affect security.
 
 7.  IANA Considerations
 
