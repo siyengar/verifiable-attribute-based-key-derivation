@@ -208,11 +208,11 @@ def PKGen(t, skM, pkM):
     pi = skM.a0
     keyBits = len(metadata)
     for i in range(keyBits):
-        if t[i] == 1:
-            pi = pi * skM[i]
-            pis.append(pi)
-        else:
+        if t[i] == 0:
             pis.append(None)
+            continue
+        pi = pi * skM[i]
+        pis.append(pi)
     skT = pi
     pkProofs = GenProofs(metadata, pis, pkM)
     return (skT, pkProofs)
