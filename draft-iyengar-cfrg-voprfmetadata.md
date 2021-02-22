@@ -109,8 +109,12 @@ We define new member functions on the prime-order group `GG` defined in
 - NewGenerator(): A member function of `GG` that samples a new generator
   for the group.
 
+## Discrete log proofs
+TODO: describe the discrete log proofs
+
 ## Other Conventions
-All algorithm descriptions are written in a Python-like pseudocode.
+All algorithm descriptions are written in a Python-like pseudocode. All
+scalar multiplications are performed modulo `GF(p)`.
 
 # Protocol
 
@@ -177,9 +181,9 @@ def MasterKeyGen(metadataBits):
     for i in range(metadataBits):
         hi = GG.ScalarMult(h, skElements[i])
         pkElements.append(hi)
-    P0 = GG.ScalarMult(g, a0)
+    P0 = GG.ScalarBaseMult(a0)
     skM = (a0, skElements)
-    pkM = (G, g, h, metadata_bits, P0, pkElements)
+    pkM = (GG.g, h, metadataBits, P0, pkElements)
     return (skM, pkM)
 ~~~
 
@@ -224,7 +228,7 @@ def GenProofs(t, pis, pkM):
     for i in range(numProofs):
         if t[i] == 0:
             continue
-        Pi = GG.ScalarMult(g, pis[i])
+        Pi = GG.ScalarMult(pkM.g, pis[i])
         proofi = DLEQProve(pkM.h, pkM.hi[i], previousPi, Pi)
         proofs.append(proofi)
         previousPi = Pi
@@ -280,6 +284,8 @@ MUST define their own mechanism encode metadata into bits.
 # Security Considerations
 
 ## Cryptographic security
+TODO: talk about how generating the public key binds the metadata to the final
+VOPRF evaluation.
 
 ### Hardness assumptions
 
