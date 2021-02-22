@@ -69,7 +69,8 @@ Table of Contents
      1.2.  Terminology
    2.  Preliminaries
      2.1.  Prime-Order Group Dependency
-     2.2.  Other Conventions
+     2.2.  Discrete log proofs
+     2.3.  Other Conventions
    3.  Protocol
      3.1.  Overview
      3.2.  Pre-Setup
@@ -166,9 +167,14 @@ Table of Contents
    *  NewGenerator(): A member function of "GG" that samples a new
       generator for the group.
 
-2.2.  Other Conventions
+2.2.  Discrete log proofs
+
+   TODO: describe the discrete log proofs
+
+2.3.  Other Conventions
 
    All algorithm descriptions are written in a Python-like pseudocode.
+   All scalar multiplications are performed modulo "GF(p)".
 
 3.  Protocol
 
@@ -236,9 +242,9 @@ Table of Contents
        for i in range(metadataBits):
            hi = GG.ScalarMult(h, skElements[i])
            pkElements.append(hi)
-       P0 = GG.ScalarMult(g, a0)
+       P0 = GG.ScalarBaseMult(a0)
        skM = (a0, skElements)
-       pkM = (G, g, h, metadata_bits, P0, pkElements)
+       pkM = (GG.g, h, metadataBits, P0, pkElements)
        return (skM, pkM)
 
 3.3.  Evaluate VOPRF
@@ -282,7 +288,7 @@ Table of Contents
        for i in range(numProofs):
            if t[i] == 0:
                continue
-           Pi = GG.ScalarMult(g, pis[i])
+           Pi = GG.ScalarMult(pkM.g, pis[i])
            proofi = DLEQProve(pkM.h, pkM.hi[i], previousPi, Pi)
            proofs.append(proofi)
            previousPi = Pi
@@ -338,6 +344,9 @@ Table of Contents
 6.  Security Considerations
 
 6.1.  Cryptographic security
+
+   TODO: talk about how generating the public key binds the metadata to
+   the final VOPRF evaluation.
 
 6.1.1.  Hardness assumptions
 
