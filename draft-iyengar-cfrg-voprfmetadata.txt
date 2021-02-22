@@ -80,13 +80,15 @@ Table of Contents
      4.2.  Encoding metadata
    5.  Comparison with other approaches
      5.1.  Pairings
-     5.2.  Regular key derivation
+     5.2.  Partially oblivious PRF
    6.  Security Considerations
      6.1.  Cryptographic security
        6.1.1.  Hardness assumptions
      6.2.  Selective security vs full security
    7.  IANA Considerations
-   8.  Normative References
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
    Acknowledgments
    Author's Address
 
@@ -370,7 +372,32 @@ def GenProofs(t, pis, skM, pkM):
 
 5.1.  Pairings
 
-5.2.  Regular key derivation
+   It is possible to construct VOPRFs with public metadata using
+   pairing-friendly curves [I-D.draft-irtf-cfrg-pairing-friendly-curves]
+   with an approach in [Pythia15].
+
+   However this approach has some disadvantages.  Pairings are not
+   widely available in cryptographic libraries and are also not
+   compatible with existing deployed VOPRFs like in
+   [I-D.irtf-cfrg-voprf].  The approach described here allows
+   applications to use existing deployed VOPRFs while only changing the
+   mechanism of key derivation.
+
+5.2.  Partially oblivious PRF
+
+   Another approach that could be used to bind metadata to a VOPRF
+   evaluation is to use a similar method in [pOPRF18] which uses a
+   regular "PRF(k, metadata)" to derive a secret key based on the
+   metadata which is then used in the VOPRF.
+
+   The verifiability of public key could be achieved by publishing every
+   public key for each metadata value in a central repository, which
+   could be checked by the client.  For large number of values of
+   metadata "b", this approach generates "O(b)" keys, which can be
+   difficult for clients and servers to manage.  In contrast, the
+   approach described in this document, the size of the master public
+   key is "O(log b)", and the public keys of each attribute can be
+   verified against the master key later.
 
 6.  Security Considerations
 
@@ -387,12 +414,16 @@ def GenProofs(t, pis, skM, pkM):
 
    This document has no IANA actions.
 
-8.  Normative References
+8.  References
 
-   [Camenisch97]
-              "Proof Systems for General Statements about Discrete
-              Logarithms",
-              <https://crypto.ethz.ch/publications/files/CamSta97b.pdf>.
+8.1.  Normative References
+
+   [I-D.draft-irtf-cfrg-pairing-friendly-curves]
+              Sakemi, Y., Kobayashi, T., Saito, T., and R. S. Wahby,
+              "Pairing-Friendly Curves", Work in Progress, Internet-
+              Draft, draft-irtf-cfrg-pairing-friendly-curves-09, 16
+              November 2020, <https://datatracker.ietf.org/doc/html/
+              draft-irtf-cfrg-pairing-friendly-curves-09.txt>.
 
    [I-D.irtf-cfrg-voprf]
               Davidson, A., Faz-Hernandez, A., Sullivan, N., and C. A.
@@ -402,10 +433,6 @@ def GenProofs(t, pis, skM, pkM):
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               voprf-06.txt>.
 
-   [PrivateStats]
-              "PrivateStats, De-Identified Authenticated Logging at
-              Scale", <https://research.fb.com/privatestats>.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -414,6 +441,23 @@ def GenProofs(t, pis, skM, pkM):
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://datatracker.ietf.org/doc/html/rfc8174>.
+
+8.2.  Informative References
+
+   [Camenisch97]
+              "Proof Systems for General Statements about Discrete
+              Logarithms",
+              <https://crypto.ethz.ch/publications/files/CamSta97b.pdf>.
+
+   [pOPRF18]  "Threshold Partially-Oblivious PRFs with Applications to
+              Key Management", <https://eprint.iacr.org/2018/733>.
+
+   [PrivateStats]
+              "PrivateStats, De-Identified Authenticated Logging at
+              Scale", <https://research.fb.com/privatestats>.
+
+   [Pythia15] "The Pythia PRF Service",
+              <https://eprint.iacr.org/2015/644.pdf>.
 
 Acknowledgments
 
