@@ -179,17 +179,20 @@ elements in `skM` for each bit of `t` that is set to `1`.
 
 To prove that `skT` is derived from `skM`, `GenProofs` generates `n` discrete
 log proofs, one for each bit of the metadata.  For each proof it tries to prove
-that `log(hi ^ t[i]) / log(h) == log(Pi) / log(Pi-1)`.  Since `hi = ai * h`
+that `log(hi) / log(h) == log(Pi) / log(Pi-1)`.  Since `hi = ai * h`
 and `Pi = ai * Pi-1`, this proves that `ai` was correctly used for bit `i`.
 
 ~~~
 def PKGen(t, skM, pkM):
-    pi = skM.a0
     pis = []
+    pi = skM.a0
     keyBits = len(metadata)
     for i in range(keyBits):
-        pi = pi * (skM[i] ^ t[i])
-        pis.append(pi)
+        if t[i] == 1:
+		    pi = pi * skM[i]
+		    pis.append(pi)
+        else:
+            pis.append(None)
     skT = pi
     pkProofs = GenProofs(metadata, pis, pkM)
     return (skT, pkProofs)
@@ -199,8 +202,10 @@ def GenProofs(t, pis, pkM):
     numProofs = len(pis)
     previousPi = pkM.P0
     for i in range(numProofs):
+		if pis[i] == 0:
+			continue
 		Pi = g.ScalarMult(pis[i])
-        proofi = DLEQProve(pkM.h, pkM.hi ^ t[i], previousPi, Pi)
+        proofi = DLEQProve(pkM.h, pkM.hi[i], previousPi, Pi)
         proofs.append(proofi)
 		previousPi = Pi
     return proofs
@@ -216,7 +221,9 @@ def PKVerify(pkM, pkT, t, pkProofs):
 	previousPi = pkM.P0
 	proofVerified = True
     for proof in pkProofs:
-		verified = DLEQVerify(pkM.h, pkM.hi ^ t[i], previousPi, proof) 	
+        if t[i] == 0:
+           continue
+		verified = DLEQVerify(pkM.h, pkM.hi[i], previousPi, proof)
 		proofVerified = proofVerified & verified
 		previousPi = proof
 	return proofVerified
