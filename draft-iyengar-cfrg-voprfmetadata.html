@@ -8,10 +8,10 @@
 <meta content="Subodh Iyengar" name="author">
 <meta content="
        This document describes a verifable mechansim to bind public metadata to an
-existing Verifiable oblivious Pseduo-Random function  .
-Using zero knowledge proofs a receiver can verify that, for an input x, a
-VOPRF(k, x, metadata), is generated from a secret key k, as well as the given
-metadata. 
+existing Verifiable oblivious Pseduo-Random function  
+(VOPRF). Using zero knowledge proofs a receiver can verify that, for an input
+x, a VOPRF(k, x, metadata), is generated from a secret key k, as well as the
+given metadata. 
     " name="description">
 <meta content="xml2rfc 3.5.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -877,10 +877,10 @@ address div.right {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document describes a verifable mechansim to bind public metadata to an
-existing Verifiable oblivious Pseduo-Random function <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>.
-Using zero knowledge proofs a receiver can verify that, for an input x, a
-VOPRF(k, x, metadata), is generated from a secret key k, as well as the given
-metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+existing Verifiable oblivious Pseduo-Random function <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>
+(VOPRF). Using zero knowledge proofs a receiver can verify that, for an input
+x, a VOPRF(k, x, metadata), is generated from a secret key k, as well as the
+given metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -940,105 +940,102 @@ metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.1">
+<nav class="toc"><ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.1.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-requirements" class="xref">Requirements</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.1.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-terminology" class="xref">Terminology</a><a href="#section-toc.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.2">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-preliminaries" class="xref">Preliminaries</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.2.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.2.2.1">
                 <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-prime-order-group-dependenc" class="xref">Prime-Order Group Dependency</a><a href="#section-toc.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.2.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.2.2.2">
                 <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="xref">2.2</a>.  <a href="#name-other-conventions" class="xref">Other Conventions</a><a href="#section-toc.1-1.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.2.2.3">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.2.2.3">
                 <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>.  <a href="#name-discrete-log-proofs" class="xref">Discrete log proofs</a><a href="#section-toc.1-1.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.3">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-protocol" class="xref">Protocol</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-overview" class="xref">Overview</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-pre-setup" class="xref">Pre-Setup</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.3">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-evaluate-voprf" class="xref">Evaluate VOPRF</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.4">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-application-considerations" class="xref">Application considerations</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.4.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-metadata-bits" class="xref">Metadata bits</a><a href="#section-toc.1-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.4.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-encoding-metadata" class="xref">Encoding metadata</a><a href="#section-toc.1-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.5">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-comparison-with-other-appro" class="xref">Comparison with other approaches</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.5.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-pairings" class="xref">Pairings</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-partially-oblivious-prf" class="xref">Partially oblivious PRF</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.6">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>.  <a href="#name-cryptographic-security" class="xref">Cryptographic security</a><a href="#section-toc.1-1.6.2.1.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1.2.1">
-                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="xref">6.1.1</a>.  <a href="#name-l-exponent-diffie-hellman-a" class="xref">l-exponent Diffie Hellman assumption</a><a href="#section-toc.1-1.6.2.1.2.1.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.6.2.1.2.1">
+                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="xref">6.1.1</a>.  <a href="#name-n-diffie-hellman-exponent-a" class="xref">n-Diffie Hellman exponent assumption</a><a href="#section-toc.1-1.6.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1.2.2">
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.6.2.1.2.2">
                     <p id="section-toc.1-1.6.2.1.2.2.1"><a href="#section-6.1.2" class="xref">6.1.2</a>.  <a href="#name-selective-security-vs-full-" class="xref">Selective security vs full security</a><a href="#section-toc.1-1.6.2.1.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                  <li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1.2.3">
-                    <p id="section-toc.1-1.6.2.1.2.3.1"><a href="#section-6.1.3" class="xref">6.1.3</a>.  <a href="#name-size-of-metadata" class="xref">Size of metadata</a><a href="#section-toc.1-1.6.2.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.7">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.8">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty compact toc">
-<li class="ulEmpty compact toc" id="section-toc.1-1.8.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.8.2.1">
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty compact toc" id="section-toc.1-1.8.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.9">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-appendix.a" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty compact toc" id="section-toc.1-1.10">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -1436,13 +1433,21 @@ verified against the master key later.<a href="#section-5.2-2" class="pilcrow">�
 proof in <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span> that the VOPRF defined here is a PRF even after
 giving an adversary access to proofs from <code>PKGen</code>. The VOPRF defined in
 <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> when combined with attributes results in a PRF output
-of <code>PRF(skM, t, x) = a0 * a1 ... * an * H(x)</code>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<div id="l-exponent-diffie-hellman-assumption">
+of <code>PRF(skM, t, x) = a0^t1 * a1^t2 ... * an^tn * H(x)</code>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<div id="n-diffie-hellman-exponent-assumption">
 <section id="section-6.1.1">
-          <h4 id="name-l-exponent-diffie-hellman-a">
-<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-l-exponent-diffie-hellman-a" class="section-name selfRef">l-exponent Diffie Hellman assumption</a>
+          <h4 id="name-n-diffie-hellman-exponent-a">
+<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-n-diffie-hellman-exponent-a" class="section-name selfRef">n-Diffie Hellman exponent assumption</a>
           </h4>
-<p id="section-6.1.1-1">TODO: discuss l-exponent DH problem<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-1">There are several variants of the Diffie-Hellman assumption and the proof of
+the VOPRF with public metadata is based on the n-Diffie Hellman exponent
+assumption. The n-DHE problem requires an adversary to distinguish the n+1-th
+power of a secret <code>a</code> hidden in the exponent from a random element in <code>GG</code>.<a href="#section-6.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-2">Sample uniformly at random <code>d</code> in {0,1}, and a random <code>r</code> from <code>GF(p)</code>:
+- Given <code>G</code> is a generator in <code>GG</code>
+- Given <code>G</code>, <code>a * G</code> , <code>(a^2) * G</code>, ..., <code>(a^n) * G</code>
+- if <code>d</code> == 0: <code>C = a^(n+1) * G</code> else: <code>C = r * a</code><a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1.1-3">Output <code>d' == d</code><a href="#section-6.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="selective-security-vs-full-security">
@@ -1450,15 +1455,18 @@ of <code>PRF(skM, t, x) = a0 * a1 ... * an * H(x)</code>.<a href="#section-6.1-1
           <h4 id="name-selective-security-vs-full-">
 <a href="#section-6.1.2" class="section-number selfRef">6.1.2. </a><a href="#name-selective-security-vs-full-" class="section-name selfRef">Selective security vs full security</a>
           </h4>
-<p id="section-6.1.2-1">TODO: discuss what selective security is and how to transform.<a href="#section-6.1.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="size-of-metadata">
-<section id="section-6.1.3">
-          <h4 id="name-size-of-metadata">
-<a href="#section-6.1.3" class="section-number selfRef">6.1.3. </a><a href="#name-size-of-metadata" class="section-name selfRef">Size of metadata</a>
-          </h4>
-<p id="section-6.1.3-1">TODO: discuss how size of metadata might affect security.<a href="#section-6.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.2-1">The security properties of the VOPRF with public metadata described in this
+draft is based on the proof in <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span> that the VOPRF is a
+selectively-secure VRF. Selective-security is a weaker notion of security that
+requires an adversary to commit to the challenge input (in this case, the
+metadata and value x) before trying to break the PRF.<a href="#section-6.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.1.2-2">In practice, if target inputs are independent of the system parameters, there
+should not be an advantage to allowing the attacker to choose the target after
+seeing system parameters. To convert our VOPRF with public metadata to one
+satisfying a full security notion in the random oracle model, we require that
+the metadata be hashed with a collision-resistant hash function with
+sufficiently large output (&gt;=256-bits). For smaller metadata sets therefore,
+the selectively-secure VRF is much more efficient.<a href="#section-6.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
