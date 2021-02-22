@@ -33,10 +33,10 @@ normative:
   Camenisch97:
     title: Proof Systems for General Statements about Discrete Logarithms
     target: https://crypto.ethz.ch/publications/files/CamSta97b.pdf
-	date: false
+    date: false
     authors:
-	 -
-       ins: J. Camenisch, M. Stadler
+      -
+        ins: J. Camenisch, M. Stadler
 
 informative:
 
