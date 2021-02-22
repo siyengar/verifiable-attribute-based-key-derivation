@@ -147,18 +147,24 @@ Table of Contents
 2.  Preliminaries
 
    The document defines extensions to the VOPRF required to support
-   metadata.  This document depends on the following: - "GG": A prime-
-   order group implementing the API described in [I-D.irtf-cfrg-voprf]
-   as well as the additional APIs defined below in Section 2.1. -
-   "Metadata": The metadata is defined as "n" bits.
+   metadata.  This document depends on the following:
+
+   *  "GG": A prime-order group implementing the API described in
+      [I-D.irtf-cfrg-voprf] as well as the additional APIs defined below
+      in Section 2.1.
+
+   *  "Metadata": The metadata is defined as "n" bits.
 
 2.1.  Prime-Order Group Dependency
 
    We define new member functions on the prime-order group "GG" defined
-   in [I-D.irtf-cfrg-voprf]: - ScalarMult(point, scalar): A member
-   function of "GG" that multiples an element in the group with a
-   "scalar" from "GF(p)". - NewGenerator(): A member function of "GG"
-   that samples a new generator for the group.
+   in [I-D.irtf-cfrg-voprf]:
+
+   *  ScalarMult(point, scalar): A member function of "GG" that
+      multiples an element in the group with a "scalar" from "GF(p)".
+
+   *  NewGenerator(): A member function of "GG" that samples a new
+      generator for the group.
 
 2.2.  Other Conventions
 
@@ -261,8 +267,8 @@ Table of Contents
        keyBits = len(metadata)
        for i in range(keyBits):
            if t[i] == 1:
-                       pi = pi * skM[i]
-                       pis.append(pi)
+               pi = pi * skM[i]
+               pis.append(pi)
            else:
                pis.append(None)
        skT = pi
@@ -274,12 +280,12 @@ Table of Contents
        numProofs = len(pis)
        previousPi = pkM.P0
        for i in range(numProofs):
-                   if t[i] == 0:
-                           continue
-                   Pi = GG.ScalarMult(g, pis[i])
+           if t[i] == 0:
+               continue
+           Pi = GG.ScalarMult(g, pis[i])
            proofi = DLEQProve(pkM.h, pkM.hi[i], previousPi, Pi)
            proofs.append(proofi)
-                   previousPi = Pi
+           previousPi = Pi
        return proofs
 
    Once "PKGen" has generated a public key for a set of "metadata" bits,
