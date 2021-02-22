@@ -22,6 +22,8 @@ author:
 
 normative:
   RFC2119:
+
+informative:
   PrivateStats:
     title: PrivateStats, De-Identified Authenticated Logging at Scale
     target: https://research.fb.com/privatestats
@@ -37,8 +39,20 @@ normative:
     authors:
       -
         ins: J. Camenisch, M. Stadler
-
-informative:
+  Pythia15:
+    title: The Pythia PRF Service
+    target: https://eprint.iacr.org/2015/644.pdf
+    date: false
+    authors:
+      -
+        ins: A. Everspaugh et, al.
+  pOPRF18:
+    title: Threshold Partially-Oblivious PRFs with Applications to Key Management
+    target: https://eprint.iacr.org/2018/733
+    date: false
+    authors:
+      -
+        ins: S. Jarecki, H. Krawczyk, J. Resch
 
 --- abstract
 
@@ -318,8 +332,28 @@ MUST define their own mechanism encode metadata into bits.
 # Comparison with other approaches
 
 ## Pairings
+It is possible to construct VOPRFs with public metadata using pairing-friendly
+curves {{!I-D.draft-irtf-cfrg-pairing-friendly-curves}} with an approach in
+{{Pythia15}}.
 
-## Regular key derivation
+However this approach has some disadvantages.  Pairings are not widely
+available in cryptographic libraries and are also not compatible with existing
+deployed VOPRFs like in {{!I-D.irtf-cfrg-voprf}}. The approach described here
+allows applications to use existing deployed VOPRFs while only changing the
+mechanism of key derivation.
+
+## Partially oblivious PRF
+Another approach that could be used to bind metadata to a VOPRF evaluation is
+to use a similar method in {{pOPRF18}} which uses a regular `PRF(k, metadata)`
+to derive a secret key based on the metadata which is then used in the VOPRF.
+
+The verifiability of public key could be achieved by publishing every public
+key for each metadata value in a central repository, which could be checked by
+the client.  For large number of values of metadata `b`, this approach
+generates `O(b)` keys, which can be difficult for clients and servers to
+manage. In contrast, the approach described in this document, the size of the
+master public key is `O(log b)`, and the public keys of each attribute can be
+verified against the master key later.
 
 # Security Considerations
 
