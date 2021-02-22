@@ -32,7 +32,7 @@ normative:
         org: Facebook
   Camenisch97:
     title: Proof Systems for General Statements about Discrete Logarithms
-    target: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.56.1208
+    target: https://crypto.ethz.ch/publications/files/CamSta97b.pdf
 	date: false
     authors:
 	 -
