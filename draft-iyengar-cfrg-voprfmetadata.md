@@ -93,6 +93,7 @@ The following terms are used throughout this document.
 
 The document defines extensions to the VOPRF required to support metadata.
 This document depends on the following:
+
 - `GG`: A prime-order group implementing the API described in
   {{!I-D.irtf-cfrg-voprf}} as well as the additional APIs defined below in
   {{pog}}.
@@ -102,6 +103,7 @@ This document depends on the following:
 
 We define new member functions on the prime-order group `GG` defined in
 {{!I-D.irtf-cfrg-voprf}}:
+
 - ScalarMult(point, scalar): A member function of `GG` that multiples an
   element in the group with a `scalar` from `GF(p)`.
 - NewGenerator(): A member function of `GG` that samples a new generator
@@ -207,8 +209,8 @@ def PKGen(t, skM, pkM):
     keyBits = len(metadata)
     for i in range(keyBits):
         if t[i] == 1:
-		    pi = pi * skM[i]
-		    pis.append(pi)
+            pi = pi * skM[i]
+            pis.append(pi)
         else:
             pis.append(None)
     skT = pi
@@ -220,12 +222,12 @@ def GenProofs(t, pis, pkM):
     numProofs = len(pis)
     previousPi = pkM.P0
     for i in range(numProofs):
-		if t[i] == 0:
-			continue
-		Pi = GG.ScalarMult(g, pis[i])
+        if t[i] == 0:
+            continue
+        Pi = GG.ScalarMult(g, pis[i])
         proofi = DLEQProve(pkM.h, pkM.hi[i], previousPi, Pi)
         proofs.append(proofi)
-		previousPi = Pi
+        previousPi = Pi
     return proofs
 ~~~
 
