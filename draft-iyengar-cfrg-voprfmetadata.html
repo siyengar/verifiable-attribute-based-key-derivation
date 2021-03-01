@@ -9,10 +9,10 @@
 <meta content="Ananth Raghunathan" name="author">
 <meta content="
        This document describes a verifable mechansim to bind public metadata to an
-existing Verifiable oblivious Pseduo-Random function  
-(VOPRF). Using zero knowledge proofs a receiver can verify that, for an input
-x, a VOPRF(k, x, metadata), is generated from a secret key k, as well as the
-given metadata. 
+existing Verifiable Oblivious Pseduorandom Function  
+(VOPRF). With this extension, a client can verify that y = F(k, x) for
+pseudorandom function F, private input x, and public metadata t, where the PRF
+key k is cryptographically bound to the metadata t. 
     " name="description">
 <meta content="xml2rfc 3.5.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -841,12 +841,12 @@ address div.right {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">TODO - Abbreviation</td>
-<td class="right">February 2021</td>
+<td class="center">VOPRFs with Public Metadata</td>
+<td class="right">March 2021</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Iyengar &amp; Raghunathan</td>
-<td class="center">Expires 26 August 2021</td>
+<td class="center">Expires 2 September 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -859,12 +859,12 @@ address div.right {
 <dd class="internet-draft">draft-iyengar-cfrg-voprfmetadata-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-02-22" class="published">22 February 2021</time>
+<time datetime="2021-03-01" class="published">1 March 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-08-26">26 August 2021</time></dd>
+<dd class="expires"><time datetime="2021-09-02">2 September 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -882,10 +882,10 @@ address div.right {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document describes a verifable mechansim to bind public metadata to an
-existing Verifiable oblivious Pseduo-Random function <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>
-(VOPRF). Using zero knowledge proofs a receiver can verify that, for an input
-x, a VOPRF(k, x, metadata), is generated from a secret key k, as well as the
-given metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+existing Verifiable Oblivious Pseduorandom Function <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>
+(VOPRF). With this extension, a client can verify that y = F(k, x) for
+pseudorandom function F, private input x, and public metadata t, where the PRF
+key k is cryptographically bound to the metadata t.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -917,7 +917,7 @@ given metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 August 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 September 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -945,102 +945,91 @@ given metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.1">
+<nav class="toc"><ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.1.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1.2.1">
                 <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-requirements" class="xref">Requirements</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.1.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-terminology" class="xref">Terminology</a><a href="#section-toc.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.2">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-preliminaries" class="xref">Preliminaries</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-prime-order-group-dependenc" class="xref">Prime-Order Group Dependency</a><a href="#section-toc.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="xref">2.2</a>.  <a href="#name-other-conventions" class="xref">Other Conventions</a><a href="#section-toc.1-1.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.2.2.3">
-                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>.  <a href="#name-discrete-log-proofs" class="xref">Discrete log proofs</a><a href="#section-toc.1-1.2.2.3.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-protocol" class="xref">Protocol</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.3.2.1">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-public-metadata-extension" class="xref">Public Metadata Extension</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-overview" class="xref">Overview</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-pre-setup" class="xref">Pre-Setup</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-main-key-generation" class="xref">Main Key Generation</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-evaluate-voprf" class="xref">Evaluate VOPRF</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-public-key-generation" class="xref">Public Key Generation</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.4">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-application-considerations" class="xref">Application considerations</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.4.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-metadata-bits" class="xref">Metadata bits</a><a href="#section-toc.1-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.4.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-encoding-metadata" class="xref">Encoding metadata</a><a href="#section-toc.1-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.5">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-comparison-with-other-appro" class="xref">Comparison with other approaches</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.5.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-pairings" class="xref">Pairings</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.5.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.5.2.2">
                 <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-partially-oblivious-prf" class="xref">Partially oblivious PRF</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.6">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.6.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>.  <a href="#name-cryptographic-security" class="xref">Cryptographic security</a><a href="#section-toc.1-1.6.2.1.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.6.2.1.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1.2.1">
                     <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="xref">6.1.1</a>.  <a href="#name-n-diffie-hellman-exponent-a" class="xref">n-Diffie Hellman exponent assumption</a><a href="#section-toc.1-1.6.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="compact ulEmpty toc" id="section-toc.1-1.6.2.1.2.2">
+                  <li class="ulEmpty compact toc" id="section-toc.1-1.6.2.1.2.2">
                     <p id="section-toc.1-1.6.2.1.2.2.1"><a href="#section-6.1.2" class="xref">6.1.2</a>.  <a href="#name-selective-security-vs-full-" class="xref">Selective security vs full security</a><a href="#section-toc.1-1.6.2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.7">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.8">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
-<ul class="compact ulEmpty toc">
-<li class="compact ulEmpty toc" id="section-toc.1-1.8.2.1">
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.8.2.1">
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact ulEmpty toc" id="section-toc.1-1.8.2.2">
+              <li class="ulEmpty compact toc" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-appendix.a" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact ulEmpty toc" id="section-toc.1-1.10">
+          <li class="ulEmpty compact toc" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
@@ -1052,34 +1041,35 @@ given metadata.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">A VOPRF allows a client and server to evaluate a psuedo-random function
+<p id="section-1-1">A VOPRF allows a client and server to evaluate a psuedorandom function
 <code>F(k, x)</code>, with secret key <code>k</code>, and input <code>x</code> without the client learning the
-key <code>k</code> and the server learning the input <code>x</code>.  Additionally in a VOPRF, the
+key <code>k</code> and the server learning the input <code>x</code>.  Additionally, in a VOPRF, the
 client can verify that the output was computed using the key <code>k</code>.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">One challenge in VOPRFs is to be able to bind public metadata to the output
 of the VOPRF while keeping the VOPRF both verifiable and oblivious.
-Unlike the input x to the VOPRF, public metadata is not meant
-to be secret to either the client or the server.  This public metadata is
+Unlike the client's private input <code>x</code> to the VOPRF, public metadata is not meant
+to be secret to either the client or the server. This public metadata is
 useful in applications where being able to bind application context to a VOPRF
-output is criticial to the security of the application.<a href="#section-1-2" class="pilcrow">¶</a></p>
+output is critical to the security of the application.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">In this draft we describe a mechanism to bind public metadata to a VOPRF by
-deriving the public-private keypair that is used by the VOPRF from the
-metadata <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span>.  This method allows the use of existing elliptic
-curve VOPRF ciphers while only changing the way the secret key is derived.
-Additionally, the key derivation mechanism of the public key can be verified by
-a client using non-interactive zero-knowledge proofs to prove that the metadata
-specific key is derived from a master secret.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The draft does not describe how metadata is used, but that left to specific
-application protocols that use this public metadata mechanism.<a href="#section-1-4" class="pilcrow">¶</a></p>
+deriving the public-private key pair that is used by the VOPRF from the
+metadata <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span>. This method extends the design of <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>
+by changing the way the OPRF evaluation secret key is derived. Specifically,
+the extension in this specification allows servers to prove in zero knowledge that
+a given OPRF key is bound to public metadata and derived from a given main
+secret.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The draft does not describe how metadata is used, though does include application
+considerations for selecting and encoding metadata.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="requirements">
 <section id="section-1.1">
         <h3 id="name-requirements">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements" class="section-name selfRef">Requirements</a>
         </h3>
-<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span>
-when, and only when, they appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -1097,11 +1087,9 @@ when, and only when, they appear in all capitals, as shown here.<a href="#sectio
 the output of the protocol.<a href="#section-1.2-2.3" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-1.2-2.4">Server: Computes the pseudorandom function over a secret key. Learns
-nothing about the client's input.<a href="#section-1.2-2.4" class="pilcrow">¶</a>
+nothing about the client's private input.<a href="#section-1.2-2.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-1.2-2.5">NIZK: Non-interactive zero knowledge.<a href="#section-1.2-2.5" class="pilcrow">¶</a>
-</li>
-          <li class="normal" id="section-1.2-2.6">DLEQ: Discrete Logarithm Equality.<a href="#section-1.2-2.6" class="pilcrow">¶</a>
+          <li class="normal" id="section-1.2-2.5">NIZK: Non-Interactive Zero Knowledge.<a href="#section-1.2-2.5" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1114,91 +1102,25 @@ nothing about the client's input.<a href="#section-1.2-2.4" class="pilcrow">¶</
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-preliminaries" class="section-name selfRef">Preliminaries</a>
       </h2>
 <p id="section-2-1">The document defines extensions to the VOPRF required to support metadata.
-This document depends on the following:<a href="#section-2-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-2-2.1">
-          <code>GG</code>: A prime-order group implementing the API described in
-<span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> as well as the additional APIs defined below in
-<a href="#pog" class="xref">Section 2.1</a>.<a href="#section-2-2.1" class="pilcrow">¶</a>
-</li>
-        <li class="normal" id="section-2-2.2">
-          <code>Public Metadata</code>: The public metadata is defined as an <code>n</code> bit vector. To
-represent <code>b</code> values, an application could use <code>log b</code> bits.<a href="#section-2-2.2" class="pilcrow">¶</a>
-</li>
-      </ul>
-<div id="pog">
-<section id="section-2.1">
-        <h3 id="name-prime-order-group-dependenc">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-prime-order-group-dependenc" class="section-name selfRef">Prime-Order Group Dependency</a>
-        </h3>
-<p id="section-2.1-1">We define new member functions on the prime-order group <code>GG</code> defined in
-<span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-2.1-2.1">ScalarMult(point, scalar): A member function of <code>GG</code> that multiples an
-element in the group with a <code>scalar</code> from <code>GF(p)</code>.<a href="#section-2.1-2.1" class="pilcrow">¶</a>
-</li>
-          <li class="normal" id="section-2.1-2.2">NewGenerator(): A member function of <code>GG</code> that samples a new generator
-for the group.<a href="#section-2.1-2.2" class="pilcrow">¶</a>
-</li>
-        </ul>
+This document depends on the following a prime-order group GG implementing the
+API described in <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>. We use the same notation from that
+document as well. For example, given a Scalar <code>k</code> and Element <code>x</code>, <code>k * x</code>
+representations scalar multiplication of <code>x</code> by <code>k</code>. See <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>,
+Section 2 for details. Moreover, we assume that the utility functions <code>GenerateProof()</code>
+and <code>VerifyProof()</code> from <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> are available.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">Public metadata used in this document are n-bit strings, where n is a parameter
+that both client and server agree upon out of band. To represent b values,
+applications could use <code>log b</code> bits.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This document also uses dot notation to denote field access in structs or tuples.
+For example, given a tuple <code>A = (x, y, z)</code>, we use <code>A.x</code> to denote the first
+element of this tuple. We use the boolean operator <code>&amp;</code> to denote logical AND,
+i.e., <code>x &amp; y</code> is the logical conjunction of <code>x</code> and <code>y</code>.<a href="#section-2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="other-conventions">
-<section id="section-2.2">
-        <h3 id="name-other-conventions">
-<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-other-conventions" class="section-name selfRef">Other Conventions</a>
-        </h3>
-<p id="section-2.2-1">All algorithm descriptions are written in a Python-like pseudocode. All
-scalar multiplications are performed modulo <code>GF(p)</code>.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="discrete-log-proofs">
-<section id="section-2.3">
-        <h3 id="name-discrete-log-proofs">
-<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-discrete-log-proofs" class="section-name selfRef">Discrete log proofs</a>
-        </h3>
-<p id="section-2.3-1">Zero knowledge proofs for statements on discrete-logs were summarized by
-<span>[<a href="#Camenisch97" class="xref">Camenisch97</a>]</span>.  We describe two algorithms used in this draft on <code>GG</code>
-to prove discrete log statements.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
-<p id="section-2.3-2"><code>DLEQProve(k, A, B, C, D)</code> proves that <code>B = k * A</code> and <code>D = k * C</code> without
-revealing the value of <code>k</code>.  This type of proof is used when <code>k</code> is a secret
-value that should not be revealed to a verifier.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-2.3-3">
-<pre>
-def DLEQProve(k, A, B, C, D):
-    r = GG.RandomScalar()
-    E = r * A
-    F = r * C
-    hashInput = A || B || C || D || E || F
-    cbytes = Hash(hashInput)
-    c = GG.HashToGroup(cbytes)
-    z = r + k * c
-    return (z, E, F)
-</pre><a href="#section-2.3-3" class="pilcrow">¶</a>
-</div>
-<p id="section-2.3-4"><code>DLEQVerify(A, B, C, D, proof)</code> verifies that the proof generated by
-<code>DLEQProve</code> is valid.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-2.3-5">
-<pre>
-def DLEQVerify(A, B, C, D, proof):
-    hashInput = A || B || C || D || proof.E || proof.F
-    cbytes = Hash(hashInput)
-    c = GG.HashToGroup(cbytes)
-    cBE = cB + proof.E
-    cDF = cD + proof.F
-    zA = proof.z * A
-    zC = proof.z * C
-    return zA == cBE &amp;&amp; zC == cDF
-</pre><a href="#section-2.3-5" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-</section>
-</div>
-<div id="protocol">
+<div id="public-metadata-extension">
 <section id="section-3">
-      <h2 id="name-protocol">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-protocol" class="section-name selfRef">Protocol</a>
+      <h2 id="name-public-metadata-extension">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-public-metadata-extension" class="section-name selfRef">Public Metadata Extension</a>
       </h2>
 <div id="overview">
 <section id="section-3.1">
@@ -1206,102 +1128,116 @@ def DLEQVerify(A, B, C, D, proof):
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-overview" class="section-name selfRef">Overview</a>
         </h3>
 <p id="section-3.1-1">A server first generates a main key pair <code>(skM, pkM)</code>, where <code>skM</code> is the
-servers main secret key and <code>pkM</code> is the servers main public key.
-Given public metadata <code>t</code>, the server generates a keypair specific to the
-metadata <code>t</code>, <code>(skT, pkT) = PKGen(t, skM)</code>, where <code>skT</code> is the secret key for
-metadata <code>t</code> and <code>pkT</code> is its public key. Once a metadata specific keypair is
-available, the server can be used to evaluate a <code>VOPRF(skT, x)</code>, where <code>x</code> is
-the input for the user.  When the VOPRF is in verifiable mode, the client also
-receives a NIZK proof that <code>skT</code> and <code>pkT</code> are generated from <code>skM</code> and <code>pkM</code>
-(in verifiable mode).<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.1-2">
+servers main secret key and <code>pkM</code> is the servers main public key. (Details for
+the derivation of <code>(skM, pkM)</code> are in <a href="#main-key" class="xref">Section 3.2</a>.) Given public metadata <code>t</code>,
+the server generates a key pair specific to the metadata <code>t</code>, denoted
+<code>(skT, pkT) = PublicKeyGen(t, skM)</code>, where <code>skT</code> is the secret key for
+metadata <code>t</code> and <code>pkT</code> is its public key. Once a metadata specific key pair is
+available, a client and server can engage in the VOPRF protocol described in
+<span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> to evaluate the PRF over a clients input <code>x</code>. Importantly,
+the VOPRF MUST use the verifiable mode (see <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>, Section 3),
+wherein the server produces a proof that the ORPF output <code>y = F(skT, x)</code> was
+computed using key <code>skT</code>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The public key generation step run before the VOPRF protocol is shown below.
+Note that applications MAY combine these two round trips into the a single round
+trip, albeit at greater computational cost. Where possible, it is RECOMMENDED
+that applications run the public key generation step offline to amortize the cost
+of this step (provided that the set of metadata is small).<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-3.1-3">
 <pre>
    Client(pkM, input, metadata)        Server(skM, pkM, metadata)
   ----------------------------------------------------------
+
+          =====  offline public key generation =====
+
+                skT, pkT, pkProofs = PublicKeyGen(skM, metadata)
+
+                        pkT, pkProofs
+                        &lt;-----------
+
+    verified = PublicKeyVerify(pkM, pkT, pkProofs)
+
+          ========  online VOPRF evaluation ========
+
     blind, blindedElement = Blind(input)
 
                        blindedElement
                         ----------&gt;
-         skT, pkT, pkProofs = PKGen(skM, metadata)
 
     evaluatedElement, proof = Evaluate(skT, pkT, blindedElement)
 
-                  evaluatedElement, pkT, proof, pkProofs
+                  evaluatedElement, proof
                         &lt;----------
 
-    pkVerified = PKVerify(pkM, pkT, pkProofs)
-
-    output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
-</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
+  output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
+</pre><a href="#section-3.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-3">In the following sections we describe modifications to the VOPRF scheme in
+<p id="section-3.1-4">In the following sections we describe modifications to the VOPRF scheme in
 <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> to be able to augment an existing VOPRF with public
-metadata.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+metadata.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="pre-setup">
+<div id="main-key">
 <section id="section-3.2">
-        <h3 id="name-pre-setup">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-pre-setup" class="section-name selfRef">Pre-Setup</a>
+        <h3 id="name-main-key-generation">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-main-key-generation" class="section-name selfRef">Main Key Generation</a>
         </h3>
 <p id="section-3.2-1">We augment the offline context setup phase phase of the VOPRF in
 <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>. In this phase, both the client and server create a
 context used for executing the online phase of the protocol.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">Prior to this phase, the key pair
-(<code>skM</code>, <code>pkM</code>) should be generated by using <code>MasterKeyGen(metadataBits)</code>. This
-keypair is used as the master key for VOPRFs.  This master key is not used
-directly within the VOPRF, however, public metadata is used to generate
+<p id="section-3.2-2">Prior to this phase, the key pair (<code>skM</code>, <code>pkM</code>) should be generated from
+<code>MainKeyGen(n)</code>, where <code>n</code> is the number of allowable metadata bits. This
+key pair is used as the main key for VOPRFs.  This main key MUST NOT be used
+directly within the online VOPRF evaluation. Public metadata is used to generate
 attribute specific keys that are used in the VOPRF evaluation.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3"><code>metadataBits</code> here is the number of bits of metadata that are required for
-the application of the VOPRF.  <code>MasterKeyGen</code> samples <code>n</code> scalar elements
-<code>a0, a1, ... an</code> from the group and a new generator <code>h</code>.  <code>ai</code> is a group
-element associated with the <code>i</code>th bit of metatadata.  Public parameters
-are calculated by performing scalar multiplicaton of <code>h</code> with each <code>ai</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-3"><code>MainKeyGen</code> samples <code>n</code> scalar elements <code>a0, a1, ... an</code> from the group and a
+new generator <code>h</code>. <code>ai</code> is a group element associated with the <code>i</code>th bit of
+metadata.  Public parameters are calculated by performing scalar multiplication
+of <code>h</code> with each <code>ai</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-3.2-4">
 <pre>
-def MasterKeyGen(metadataBits):
+def MainKeyGen(n):
     ais = []
     his = []
-    h = GG.NewGroupGenerator()
+    h = GG.ScalarBaseMult(GG.RandomScalar())
     a0 = GG.RandomScalar()
-    for i in range(metadataBits):
+    for i in range(n):
         ai = GG.RandomScalar()
         ais.append(ai)
-    for i in range(metadataBits):
-        hi = GG.ScalarMult(h, ais[i])
+    for i in range(n):
+        hi = h * ais[i]
         his.append(hi)
     P0 = GG.ScalarBaseMult(a0)
     skM = (a0, ais)
-    pkM = (GG.g, h, metadataBits, P0, his)
+    pkM = (GG.g, h, n, P0, his)
     return (skM, pkM)
 </pre><a href="#section-3.2-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
-<div id="evaluate-voprf">
+<div id="public-key-generation">
 <section id="section-3.3">
-        <h3 id="name-evaluate-voprf">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-evaluate-voprf" class="section-name selfRef">Evaluate VOPRF</a>
+        <h3 id="name-public-key-generation">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-public-key-generation" class="section-name selfRef">Public Key Generation</a>
         </h3>
-<p id="section-3.3-1">When client and server have agreed on the metadata to use for the protocol,
-the server first executes <code>PKGen(skM, metadata)</code> to generate <code>skT</code> and the
-proof that <code>skT</code> is derived from <code>skM</code>.  This draft does not discuss how the
+<p id="section-3.3-1">When client and server have agreed on the metadata <code>t</code> to use for the protocol,
+the server first executes <code>PublicKeyGen(skM, t)</code> to generate <code>skT</code> and
+the proof that <code>skT</code> is derived from <code>skM</code>.  This draft does not discuss how the
 client and server agree on the metadata to use, and that is left to the
 application.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">Note that <code>skM</code> has one group element for each bit of the metadata <code>t</code>, as well
-as the extra group element <code>a0</code>. Given metadata <code>t</code>, <code>PKGen</code> calculates the
+as the extra group element <code>a0</code>. Given metadata <code>t</code>, <code>PublicKeyGen</code> calculates the
 attribute specific key by performing a scalar multiplication of all the group
 elements in <code>skM</code> for each bit of <code>t</code> that is set to <code>1</code>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">To prove that <code>skT</code> is derived from <code>skM</code>, <code>GenProofs</code> generates upto <code>n</code>
-discrete log proofs, one for each bit of the metadata.  Each proof proves
-that <code>hi = ai * h</code> and <code>Pi = ai * Pi-1</code>.  This proves that <code>ai</code> was correctly
-used for bit <code>i</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">To prove that <code>skT</code> is derived from <code>skM</code>, <code>GenerateProofs</code> generates up to <code>n</code>
+proofs, one for each bit of the metadata.  Each proof proves that <code>hi = ai * h</code>
+and <code>Pi = ai * Pi-1</code>.  This proves that <code>ai</code> was correctly used for bit <code>i</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-3.3-4">
 <pre>
-def PKGen(t, skM, pkM):
+def PublicKeyGen(t, skM, pkM):
     pis = []
     pi = skM.a0
-    keyBits = len(metadata)
+    keyBits = len(t)
     for i in range(keyBits):
         if t[i] == 0:
             pis.append(None)
@@ -1310,43 +1246,41 @@ def PKGen(t, skM, pkM):
         pis.append(pi)
     skT = pi
     pkT = GG.ScalarMultBase(skT)
-    pkProofs = GenProofs(metadata, pis, skM, pkM)
+    pkProofs = GenerateProofs(t, pis, skM, pkM)
     return (skT, pkT, pkProofs)
 
-def GenProofs(t, pis, skM, pkM):
+def GenerateProofs(t, pis, skM, pkM):
     proofs = []
-    numProofs = len(pis)
     previousPi = pkM.P0
-    for i in range(numProofs):
+    for i in range(len(pis)):
         if t[i] == 0:
             continue
         Pi = GG.ScalarBaseMult(pis[i])
-        proofi = DLEQProve(skM.ais[i], pkM.h, pkM.his[i], previousPi, Pi)
+        proofi = GenerateProof(skM.ais[i], pkM.h, pkM.his[i], previousPi, Pi)
         proofs.append((Pi, proofi))
         previousPi = Pi
     return proofs
 </pre><a href="#section-3.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-5">Once <code>PKGen</code> has generated a public key for a set of <code>metadata</code> bits,
-the client can verify that <code>skT</code> is derived from <code>skM</code>, using
-<code>PKVerify(pkM, pkT, pkProofs)</code>.  This verifies the sequence of discrete-log
-proofs generated by <code>PKGen</code>.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Once <code>PublicKeyGen</code> has generated a public key for a set of <code>n</code> bits, the client
+can verify that <code>skT</code> is derived from <code>skM</code>, using <code>PublicKeyVerify(pkM, pkT, pkProofs)</code>.
+This verifies the sequence of discrete-log proofs generated by <code>PublicKeyGen</code>.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-3.3-6">
 <pre>
-def PKVerify(pkM, pkT, t, pkProofs):
+def PublicKeyVerify(pkM, pkT, t, pkProofs):
     previousPi = pkM.P0
     proofVerified = True
     for proof in pkProofs:
         if t[i] == 0:
             continue
         Pi = proof.Pi
-        verified = DLEQVerify(pkM.h, pkM.his[i], previousPi, Pi, proof)
+        verified = VerifyProof(pkM.h, pkM.his[i], previousPi, Pi, proof)
         proofVerified = proofVerified &amp; verified
         previousPi = Pi
     return proofVerified
 </pre><a href="#section-3.3-6" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-7">A server can use <code>skT</code> generated from <code>PKGen</code> as the private key for the
+<p id="section-3.3-7">A server can use <code>skT</code> generated from <code>PublicKeyGen</code> as the private key for the
 VOPRF mechanism in <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span>.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1363,7 +1297,7 @@ VOPRF mechanism in <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-c
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-metadata-bits" class="section-name selfRef">Metadata bits</a>
         </h3>
 <p id="section-4.1-1">Applications must choose the maximum size in bits of the metadata that they
-would like to support before setup of the protocol. The size of the metdata
+would like to support before setup of the protocol. The size of the metadata
 impacts the following
 - Size of the public key
 - Computation time for attribute and proof generation<a href="#section-4.1-1" class="pilcrow">¶</a></p>
@@ -1418,8 +1352,8 @@ key for each metadata value in a central repository, which could be checked by
 the client.  For large number of values of metadata <code>b</code>, this approach
 generates <code>O(b)</code> keys, which can be difficult for clients and servers to
 manage. In contrast, the approach described in this document, the size of the
-master public key is <code>O(log b)</code>, and the public keys of each attribute can be
-verified against the master key later.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+main public key is <code>O(log b)</code>, and the public keys of each attribute can be
+verified against the main key later.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1436,7 +1370,7 @@ verified against the master key later.<a href="#section-5.2-2" class="pilcrow">�
         </h3>
 <p id="section-6.1-1">The security properties of a VOPRF with public metadata are derived from the
 proof in <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span> that the VOPRF defined here is a PRF even after
-giving an adversary access to proofs from <code>PKGen</code>. The VOPRF defined in
+giving an adversary access to proofs from <code>PublicKeyGen</code>. The VOPRF defined in
 <span>[<a href="#I-D.irtf-cfrg-voprf" class="xref">I-D.irtf-cfrg-voprf</a>]</span> when combined with attributes results in a PRF output
 of <code>PRF(skM, t, x) = a0^t1 * a1^t2 ... * an^tn * H(x)</code>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <div id="n-diffie-hellman-exponent-assumption">
@@ -1540,9 +1474,10 @@ the selectively-secure VRF is much more efficient.<a href="#section-6.1.2-2" cla
 <div id="acknowledgments">
 <section id="section-appendix.a">
       <h2 id="name-acknowledgments">
-<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+<a href="#section-appendix.a" class="section-number selfRef">Appendix A. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="section-appendix.a-1">TODO acknowledge.<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-1">The editors of this document thank all authors of the <span>[<a href="#PrivateStats" class="xref">PrivateStats</a>]</span> work, where
+the construction was originally described.<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
