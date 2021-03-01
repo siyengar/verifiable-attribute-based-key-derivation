@@ -1,6 +1,6 @@
 ---
 title: Verifiable Oblivious Pseudo-Random Functions with Public Metadata
-abbrev: "TODO - Abbreviation"
+abbrev: "VOPRFs with Public Metadata"
 docname: draft-iyengar-cfrg-voprfmetadata-latest
 category: info
 
@@ -62,46 +62,44 @@ informative:
 --- abstract
 
 This document describes a verifable mechansim to bind public metadata to an
-existing Verifiable oblivious Pseduo-Random function {{!I-D.irtf-cfrg-voprf}}
-(VOPRF). Using zero knowledge proofs a receiver can verify that, for an input
-x, a VOPRF(k, x, metadata), is generated from a secret key k, as well as the
-given metadata.
+existing Verifiable Oblivious Pseduorandom Function {{!I-D.irtf-cfrg-voprf}}
+(VOPRF). With this extension, a client can verify that y = F(k, x) for
+pseudorandom function F, private input x, and public metadata t, where the PRF
+key k is cryptographically bound to the metadata t.
 
 --- middle
 
 # Introduction
 
-A VOPRF allows a client and server to evaluate a psuedo-random function
+A VOPRF allows a client and server to evaluate a psuedorandom function
 `F(k, x)`, with secret key `k`, and input `x` without the client learning the
-key `k` and the server learning the input `x`.  Additionally in a VOPRF, the
+key `k` and the server learning the input `x`.  Additionally, in a VOPRF, the
 client can verify that the output was computed using the key `k`.
 
 One challenge in VOPRFs is to be able to bind public metadata to the output
 of the VOPRF while keeping the VOPRF both verifiable and oblivious.
-Unlike the input x to the VOPRF, public metadata is not meant
-to be secret to either the client or the server.  This public metadata is
+Unlike the client's private input `x` to the VOPRF, public metadata is not meant
+to be secret to either the client or the server. This public metadata is
 useful in applications where being able to bind application context to a VOPRF
-output is criticial to the security of the application.
+output is critical to the security of the application.
 
 In this draft we describe a mechanism to bind public metadata to a VOPRF by
-deriving the public-private keypair that is used by the VOPRF from the
-metadata {{PrivateStats}}.  This method allows the use of existing elliptic
-curve VOPRF ciphers while only changing the way the secret key is derived.
-Additionally, the key derivation mechanism of the public key can be verified by
-a client using non-interactive zero-knowledge proofs to prove that the metadata
-specific key is derived from a master secret.
+deriving the public-private key pair that is used by the VOPRF from the
+metadata {{PrivateStats}}. This method extends the design of {{!I-D.irtf-cfrg-voprf}}
+by changing the way the OPRF evaluation secret key is derived. Specifically,
+the extension in this specification allows servers to prove in zero knowledge that
+a given OPRF key is bound to public metadata and derived from a given main
+secret.
 
-The draft does not describe how metadata is used, but that left to specific
-application protocols that use this public metadata mechanism.
+The draft does not describe how metadata is used, though does include application
+considerations for selecting and encoding metadata.
 
 ## Requirements
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 {{RFC2119}} {{!RFC8174}}
-when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14}
 
 ## Terminology
+
 The following terms are used throughout this document.
 
 - PRF: Pseudorandom Function.
@@ -109,165 +107,139 @@ The following terms are used throughout this document.
 - Client: Protocol initiator. Learns pseudorandom function evaluation as
   the output of the protocol.
 - Server: Computes the pseudorandom function over a secret key. Learns
-  nothing about the client's input.
-- NIZK: Non-interactive zero knowledge.
-- DLEQ: Discrete Logarithm Equality.
+  nothing about the client's private input.
+- NIZK: Non-Interactive Zero Knowledge.
 
 # Preliminaries
 
 The document defines extensions to the VOPRF required to support metadata.
-This document depends on the following:
+This document depends on the following a prime-order group GG implementing the
+API described in {{!I-D.irtf-cfrg-voprf}}. We use the same notation from that
+document as well. For example, given a Scalar `k` and Element `x`, `k * x`
+representations scalar multiplication of `x` by `k`. See {{!I-D.irtf-cfrg-voprf}},
+Section 2 for details. Moreover, we assume that the utility functions `GenerateProof()`
+and `VerifyProof()` from {{!I-D.irtf-cfrg-voprf}} are available.
 
-- `GG`: A prime-order group implementing the API described in
-  {{!I-D.irtf-cfrg-voprf}} as well as the additional APIs defined below in
-  {{pog}}.
-- `Public Metadata`: The public metadata is defined as an `n` bit vector. To
-  represent `b` values, an application could use `log b` bits.
+Public metadata used in this document are n-bit strings, where n is a parameter
+that both client and server agree upon out of band. To represent b values,
+applications could use `log b` bits.
 
-## Prime-Order Group Dependency {#pog}
+This document also uses dot notation to denote field access in structs or tuples.
+For example, given a tuple `A = (x, y, z)`, we use `A.x` to denote the first
+element of this tuple. We use the boolean operator `&` to denote logical AND,
+i.e., `x & y` is the logical conjunction of `x` and `y`.
 
-We define new member functions on the prime-order group `GG` defined in
-{{!I-D.irtf-cfrg-voprf}}:
-
-- ScalarMult(point, scalar): A member function of `GG` that multiples an
-  element in the group with a `scalar` from `GF(p)`.
-- NewGenerator(): A member function of `GG` that samples a new generator
-  for the group.
-
-## Other Conventions
-All algorithm descriptions are written in a Python-like pseudocode. All
-scalar multiplications are performed modulo `GF(p)`.
-
-## Discrete log proofs
-Zero knowledge proofs for statements on discrete-logs were summarized by
-{{Camenisch97}}.  We describe two algorithms used in this draft on `GG`
-to prove discrete log statements.
-
-`DLEQProve(k, A, B, C, D)` proves that `B = k * A` and `D = k * C` without
-revealing the value of `k`.  This type of proof is used when `k` is a secret
-value that should not be revealed to a verifier.
-
-~~~
-def DLEQProve(k, A, B, C, D):
-    r = GG.RandomScalar()
-    E = r * A
-    F = r * C
-    hashInput = A || B || C || D || E || F
-    cbytes = Hash(hashInput)
-    c = GG.HashToGroup(cbytes)
-    z = r + k * c
-    return (z, E, F)
-~~~
-
-`DLEQVerify(A, B, C, D, proof)` verifies that the proof generated by
-`DLEQProve` is valid.
-
-~~~
-def DLEQVerify(A, B, C, D, proof):
-    hashInput = A || B || C || D || proof.E || proof.F
-    cbytes = Hash(hashInput)
-    c = GG.HashToGroup(cbytes)
-    cBE = cB + proof.E
-    cDF = cD + proof.F
-    zA = proof.z * A
-    zC = proof.z * C
-    return zA == cBE && zC == cDF
-~~~
-
-# Protocol
+# Public Metadata Extension
 
 ## Overview
+
 A server first generates a main key pair `(skM, pkM)`, where `skM` is the
-servers main secret key and `pkM` is the servers main public key.
-Given public metadata `t`, the server generates a keypair specific to the
-metadata `t`, `(skT, pkT) = PKGen(t, skM)`, where `skT` is the secret key for
-metadata `t` and `pkT` is its public key. Once a metadata specific keypair is
-available, the server can be used to evaluate a `VOPRF(skT, x)`, where `x` is
-the input for the user.  When the VOPRF is in verifiable mode, the client also
-receives a NIZK proof that `skT` and `pkT` are generated from `skM` and `pkM`
-(in verifiable mode).
+servers main secret key and `pkM` is the servers main public key. (Details for
+the derivation of `(skM, pkM)` are in {{main-key}}.) Given public metadata `t`,
+the server generates a key pair specific to the metadata `t`, denoted
+`(skT, pkT) = PublicKeyGen(t, skM)`, where `skT` is the secret key for
+metadata `t` and `pkT` is its public key. Once a metadata specific key pair is
+available, a client and server can engage in the VOPRF protocol described in
+{{!I-D.irtf-cfrg-voprf}} to evaluate the PRF over a clients input `x`. Importantly,
+the VOPRF MUST use the verifiable mode (see {{!I-D.irtf-cfrg-voprf}}, Section 3),
+wherein the server produces a proof that the ORPF output `y = F(skT, x)` was
+computed using key `skT`.
+
+The public key generation step run before the VOPRF protocol is shown below.
+Note that applications MAY combine these two round trips into the a single round
+trip, albeit at greater computational cost. Where possible, it is RECOMMENDED
+that applications run the public key generation step offline to amortize the cost
+of this step (provided that the set of metadata is small).
 
 ~~~
    Client(pkM, input, metadata)        Server(skM, pkM, metadata)
   ----------------------------------------------------------
+
+          =====  offline public key generation =====
+
+                skT, pkT, pkProofs = PublicKeyGen(skM, metadata)
+
+                        pkT, pkProofs
+                        <-----------
+
+    verified = PublicKeyVerify(pkM, pkT, pkProofs)
+
+          ========  online VOPRF evaluation ========
+
     blind, blindedElement = Blind(input)
 
                        blindedElement
                         ---------->
-         skT, pkT, pkProofs = PKGen(skM, metadata)
 
     evaluatedElement, proof = Evaluate(skT, pkT, blindedElement)
 
-                  evaluatedElement, pkT, proof, pkProofs
+                  evaluatedElement, proof
                         <----------
 
-    pkVerified = PKVerify(pkM, pkT, pkProofs)
-
-    output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
+  output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
 ~~~
 
 In the following sections we describe modifications to the VOPRF scheme in
 {{!I-D.irtf-cfrg-voprf}} to be able to augment an existing VOPRF with public
 metadata.
 
-## Pre-Setup
+## Main Key Generation {#main-key}
+
 We augment the offline context setup phase phase of the VOPRF in
 {{!I-D.irtf-cfrg-voprf}}. In this phase, both the client and server create a
 context used for executing the online phase of the protocol.
 
-Prior to this phase, the key pair
-(`skM`, `pkM`) should be generated by using `MasterKeyGen(metadataBits)`. This
-keypair is used as the master key for VOPRFs.  This master key is not used
-directly within the VOPRF, however, public metadata is used to generate
+Prior to this phase, the key pair (`skM`, `pkM`) should be generated from
+`MainKeyGen(n)`, where `n` is the number of allowable metadata bits. This
+key pair is used as the main key for VOPRFs.  This main key MUST NOT be used
+directly within the online VOPRF evaluation. Public metadata is used to generate
 attribute specific keys that are used in the VOPRF evaluation.
 
-`metadataBits` here is the number of bits of metadata that are required for
-the application of the VOPRF.  `MasterKeyGen` samples `n` scalar elements
-`a0, a1, ... an` from the group and a new generator `h`.  `ai` is a group
-element associated with the `i`th bit of metatadata.  Public parameters
-are calculated by performing scalar multiplicaton of `h` with each `ai`.
+`MainKeyGen` samples `n` scalar elements `a0, a1, ... an` from the group and a
+new generator `h`. `ai` is a group element associated with the `i`th bit of
+metadata.  Public parameters are calculated by performing scalar multiplication
+of `h` with each `ai`.
 
 ~~~
-def MasterKeyGen(metadataBits):
+def MainKeyGen(n):
     ais = []
     his = []
-    h = GG.NewGroupGenerator()
+    h = GG.ScalarBaseMult(GG.RandomScalar())
     a0 = GG.RandomScalar()
-    for i in range(metadataBits):
+    for i in range(n):
         ai = GG.RandomScalar()
         ais.append(ai)
-    for i in range(metadataBits):
-        hi = GG.ScalarMult(h, ais[i])
+    for i in range(n):
+        hi = h * ais[i]
         his.append(hi)
     P0 = GG.ScalarBaseMult(a0)
     skM = (a0, ais)
-    pkM = (GG.g, h, metadataBits, P0, his)
+    pkM = (GG.g, h, n, P0, his)
     return (skM, pkM)
 ~~~
 
-## Evaluate VOPRF
+## Public Key Generation
 
-When client and server have agreed on the metadata to use for the protocol,
-the server first executes `PKGen(skM, metadata)` to generate `skT` and the
-proof that `skT` is derived from `skM`.  This draft does not discuss how the
+When client and server have agreed on the metadata `t` to use for the protocol,
+the server first executes `PublicKeyGen(skM, t)` to generate `skT` and
+the proof that `skT` is derived from `skM`.  This draft does not discuss how the
 client and server agree on the metadata to use, and that is left to the
 application.
 
 Note that `skM` has one group element for each bit of the metadata `t`, as well
-as the extra group element `a0`. Given metadata `t`, `PKGen` calculates the
+as the extra group element `a0`. Given metadata `t`, `PublicKeyGen` calculates the
 attribute specific key by performing a scalar multiplication of all the group
 elements in `skM` for each bit of `t` that is set to `1`.
 
-To prove that `skT` is derived from `skM`, `GenProofs` generates upto `n`
-discrete log proofs, one for each bit of the metadata.  Each proof proves
-that `hi = ai * h` and `Pi = ai * Pi-1`.  This proves that `ai` was correctly
-used for bit `i`.
+To prove that `skT` is derived from `skM`, `GenerateProofs` generates up to `n`
+proofs, one for each bit of the metadata.  Each proof proves that `hi = ai * h`
+and `Pi = ai * Pi-1`.  This proves that `ai` was correctly used for bit `i`.
 
 ~~~
-def PKGen(t, skM, pkM):
+def PublicKeyGen(t, skM, pkM):
     pis = []
     pi = skM.a0
-    keyBits = len(metadata)
+    keyBits = len(t)
     for i in range(keyBits):
         if t[i] == 0:
             pis.append(None)
@@ -276,50 +248,49 @@ def PKGen(t, skM, pkM):
         pis.append(pi)
     skT = pi
     pkT = GG.ScalarMultBase(skT)
-    pkProofs = GenProofs(metadata, pis, skM, pkM)
+    pkProofs = GenerateProofs(t, pis, skM, pkM)
     return (skT, pkT, pkProofs)
 
-def GenProofs(t, pis, skM, pkM):
+def GenerateProofs(t, pis, skM, pkM):
     proofs = []
-    numProofs = len(pis)
     previousPi = pkM.P0
-    for i in range(numProofs):
+    for i in range(len(pis)):
         if t[i] == 0:
             continue
         Pi = GG.ScalarBaseMult(pis[i])
-        proofi = DLEQProve(skM.ais[i], pkM.h, pkM.his[i], previousPi, Pi)
+        proofi = GenerateProof(pkM.h, pkM.his[i], previousPi, Pi)
         proofs.append((Pi, proofi))
         previousPi = Pi
     return proofs
 ~~~
 
-Once `PKGen` has generated a public key for a set of `metadata` bits,
-the client can verify that `skT` is derived from `skM`, using
-`PKVerify(pkM, pkT, pkProofs)`.  This verifies the sequence of discrete-log
-proofs generated by `PKGen`.
+Once `PublicKeyGen` has generated a public key for a set of `n` bits, the client
+can verify that `skT` is derived from `skM`, using `PublicKeyVerify(pkM, pkT, pkProofs)`.
+This verifies the sequence of discrete-log proofs generated by `PublicKeyGen`.
 
 ~~~
-def PKVerify(pkM, pkT, t, pkProofs):
+def PublicKeyVerify(pkM, pkT, t, pkProofs):
     previousPi = pkM.P0
     proofVerified = True
     for proof in pkProofs:
         if t[i] == 0:
             continue
         Pi = proof.Pi
-        verified = DLEQVerify(pkM.h, pkM.his[i], previousPi, Pi, proof)
+        verified = VerifyProof(pkM.his[i], previousPi, Pi, proof)
         proofVerified = proofVerified & verified
         previousPi = Pi
     return proofVerified
 ~~~
 
-A server can use `skT` generated from `PKGen` as the private key for the
+A server can use `skT` generated from `PublicKeyGen` as the private key for the
 VOPRF mechanism in {{!I-D.irtf-cfrg-voprf}}.
 
 # Application considerations
 
 ## Metadata bits
+
 Applications must choose the maximum size in bits of the metadata that they
-would like to support before setup of the protocol. The size of the metdata
+would like to support before setup of the protocol. The size of the metadata
 impacts the following
 - Size of the public key
 - Computation time for attribute and proof generation
@@ -330,6 +301,7 @@ number of scalar multiplications for generating a public key and number of
 discrete log proof generations and verifications required.
 
 ## Encoding metadata
+
 Applications must choose the number of bits of metadata required in order to
 be able to represent all possible values for the application's metadata. They
 MUST define their own mechanism encode metadata into bits.
@@ -337,6 +309,7 @@ MUST define their own mechanism encode metadata into bits.
 # Comparison with other approaches
 
 ## Pairings
+
 It is possible to construct VOPRFs with public metadata using pairing-friendly
 curves {{!I-D.draft-irtf-cfrg-pairing-friendly-curves}} with an approach in
 {{Pythia15}}.
@@ -348,6 +321,7 @@ allows applications to use existing deployed VOPRFs while only changing the
 mechanism of key derivation.
 
 ## Partially oblivious PRF
+
 Another approach that could be used to bind metadata to a VOPRF evaluation is
 to use a similar method in {{pOPRF18}} which uses a regular `PRF(k, metadata)`
 to derive a secret key based on the metadata which is then used in the VOPRF.
@@ -357,8 +331,8 @@ key for each metadata value in a central repository, which could be checked by
 the client.  For large number of values of metadata `b`, this approach
 generates `O(b)` keys, which can be difficult for clients and servers to
 manage. In contrast, the approach described in this document, the size of the
-master public key is `O(log b)`, and the public keys of each attribute can be
-verified against the master key later.
+main public key is `O(log b)`, and the public keys of each attribute can be
+verified against the main key later.
 
 # Security Considerations
 
@@ -366,7 +340,7 @@ verified against the master key later.
 
 The security properties of a VOPRF with public metadata are derived from the
 proof in {{PrivateStats}} that the VOPRF defined here is a PRF even after
-giving an adversary access to proofs from `PKGen`. The VOPRF defined in
+giving an adversary access to proofs from `PublicKeyGen`. The VOPRF defined in
 {{!I-D.irtf-cfrg-voprf}} when combined with attributes results in a PRF output
 of `PRF(skM, t, x) = a0^t1 * a1^t2 ... * an^tn * H(x)`.
 
@@ -384,6 +358,7 @@ Sample uniformly at random `d` in {0,1}, and a random `r` from `GF(p)`:
 Output `d' == d`
 
 ### Selective security vs full security
+
 The security properties of the VOPRF with public metadata described in this
 draft is based on the proof in {{PrivateStats}} that the VOPRF is a
 selectively-secure VRF. Selective-security is a weaker notion of security that
@@ -405,6 +380,9 @@ This document has no IANA actions.
 --- back
 
 # Acknowledgments
+
+The editors of this document thank all authors of the {{PrivateStats}} work, where
+the construction was originally described.
+
 {:numbered="false"}
 
-TODO acknowledge.
