@@ -258,7 +258,7 @@ def GenerateProofs(t, pis, skM, pkM):
         if t[i] == 0:
             continue
         Pi = GG.ScalarBaseMult(pis[i])
-        proofi = GenerateProof(pkM.h, pkM.his[i], previousPi, Pi)
+        proofi = GenerateProof(skM.ais[i], pkM.h, pkM.his[i], previousPi, Pi)
         proofs.append((Pi, proofi))
         previousPi = Pi
     return proofs
@@ -276,7 +276,7 @@ def PublicKeyVerify(pkM, pkT, t, pkProofs):
         if t[i] == 0:
             continue
         Pi = proof.Pi
-        verified = VerifyProof(pkM.his[i], previousPi, Pi, proof)
+        verified = VerifyProof(pkM.h, pkM.his[i], previousPi, Pi, proof)
         proofVerified = proofVerified & verified
         previousPi = Pi
     return proofVerified
