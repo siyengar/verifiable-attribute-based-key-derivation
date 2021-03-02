@@ -1,0 +1,492 @@
+
+
+
+
+cfrg                                                          S. Iyengar
+Internet-Draft                                            A. Raghunathan
+Intended status: Informational                                  Facebook
+Expires: 3 September 2021                                      C.A. Wood
+                                                              Cloudflare
+                                                            2 March 2021
+
+
+   Verifiable Oblivious Pseudo-Random Functions with Public Metadata
+                draft-iyengar-cfrg-voprfmetadata-latest
+
+Abstract
+
+   This document describes a verifable mechansim to bind public metadata
+   to an existing Verifiable Oblivious Pseduorandom Function
+   [I-D.irtf-cfrg-voprf] (VOPRF).  With this extension, a client can
+   verify that y = F(k, x) for pseudorandom function F, private input x,
+   and public metadata t, where the PRF key k is cryptographically bound
+   to the metadata t.
+
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Discussion of this document takes place on the Crypto Forum Research
+   Group mailing list (cfrg@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/search/?email_list=cfrg.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/siyengar/verifiable-attribute-based-key-
+   derivation.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 3 September 2021.
+
+Copyright Notice
+
+   Copyright (c) 2021 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Simplified BSD License text
+   as described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction
+     1.1.  Requirements
+     1.2.  Terminology
+   2.  Preliminaries
+   3.  Public Metadata Extension
+     3.1.  Overview
+     3.2.  Main Key Generation
+     3.3.  Public Key Generation
+   4.  Application considerations
+     4.1.  Metadata bits
+     4.2.  Encoding metadata
+   5.  Comparison with other approaches
+     5.1.  Pairings
+     5.2.  Partially oblivious PRF
+   6.  Security Considerations
+     6.1.  Cryptographic security
+       6.1.1.  n-Diffie Hellman exponent assumption
+       6.1.2.  Selective security vs full security
+   7.  IANA Considerations
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
+   Appendix A.  Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   A VOPRF allows a client and server to evaluate a psuedorandom
+   function "F(k, x)", with secret key "k", and input "x" without the
+   client learning the key "k" and the server learning the input "x".
+   Additionally, in a VOPRF, the client can verify that the output was
+   computed using the key "k".
+
+   One challenge in VOPRFs is to be able to bind public metadata to the
+   output of the VOPRF while keeping the VOPRF both verifiable and
+   oblivious.  Unlike the client's private input "x" to the VOPRF,
+   public metadata is not meant to be secret to either the client or the
+   server.  This public metadata is useful in applications where being
+   able to bind application context to a VOPRF output is critical to the
+   security of the application.
+
+   In this draft we describe a mechanism to bind public metadata to a
+   VOPRF by deriving the public-private key pair that is used by the
+   VOPRF from the metadata [PrivateStats].  This method extends the
+   design of [I-D.irtf-cfrg-voprf] by changing the way the OPRF
+   evaluation secret key is derived.  Specifically, the extension in
+   this specification allows servers to prove in zero knowledge that a
+   given OPRF key is bound to public metadata and derived from a given
+   main secret.
+
+   The draft does not describe how metadata is used, though does include
+   application considerations for selecting and encoding metadata.
+
+1.1.  Requirements
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+1.2.  Terminology
+
+   The following terms are used throughout this document.
+
+   *  PRF: Pseudorandom Function.
+
+   *  VOPRF: Verifiable Oblivious Pseudorandom Function.
+
+   *  Client: Protocol initiator.  Learns pseudorandom function
+      evaluation as the output of the protocol.
+
+   *  Server: Computes the pseudorandom function over a secret key.
+      Learns nothing about the client's private input.
+
+   *  NIZK: Non-Interactive Zero Knowledge.
+
+2.  Preliminaries
+
+   The document defines extensions to the VOPRF required to support
+   metadata.  This document depends on the following a prime-order group
+   GG implementing the API described in [I-D.irtf-cfrg-voprf].  We use
+   the same notation from that document as well.  For example, given a
+   Scalar "k" and Element "x", "k * x" representations scalar
+   multiplication of "x" by "k".  See [I-D.irtf-cfrg-voprf], Section 2
+   for details.  Moreover, we assume that the utility functions
+   "GenerateProof()" and "VerifyProof()" from [I-D.irtf-cfrg-voprf] are
+   available.
+
+   Public metadata used in this document are n-bit strings, where n is a
+   parameter that both client and server agree upon out of band.  To
+   represent b values, applications could use "log b" bits.
+
+   This document also uses dot notation to denote field access in
+   structs or tuples.  For example, given a tuple "A = (x, y, z)", we
+   use "A.x" to denote the first element of this tuple.  We use the
+   boolean operator "&" to denote logical AND, i.e., "x & y" is the
+   logical conjunction of "x" and "y".
+
+3.  Public Metadata Extension
+
+3.1.  Overview
+
+   A server first generates a main key pair "(skM, pkM)", where "skM" is
+   the servers main secret key and "pkM" is the servers main public key.
+   (Details for the derivation of "(skM, pkM)" are in Section 3.2.)
+   Given public metadata "t", the server generates a key pair specific
+   to the metadata "t", denoted "(skT, pkT) = PublicKeyGen(t, skM)",
+   where "skT" is the secret key for metadata "t" and "pkT" is its
+   public key.  Once a metadata specific key pair is available, a client
+   and server can engage in the VOPRF protocol described in
+   [I-D.irtf-cfrg-voprf] to evaluate the PRF over a clients input "x".
+   Importantly, the VOPRF MUST use the verifiable mode (see
+   [I-D.irtf-cfrg-voprf], Section 3), wherein the server produces a
+   proof that the ORPF output "y = F(skT, x)" was computed using key
+   "skT".
+
+   The public key generation step run before the VOPRF protocol is shown
+   below.  Note that applications MAY combine these two round trips into
+   the a single round trip, albeit at greater computational cost.  Where
+   possible, it is RECOMMENDED that applications run the public key
+   generation step offline to amortize the cost of this step (provided
+   that the set of metadata is small).
+
+   Client(pkM, input, metadata)        Server(skM, pkM, metadata)
+  ----------------------------------------------------------
+
+          =====  offline public key generation =====
+
+                skT, pkT, pkProofs = PublicKeyGen(skM, metadata)
+
+                        pkT, pkProofs
+                        <-----------
+
+    verified = PublicKeyVerify(pkM, pkT, pkProofs)
+
+          ========  online VOPRF evaluation ========
+
+    blind, blindedElement = Blind(input)
+
+                       blindedElement
+                        ---------->
+
+    evaluatedElement, proof = Evaluate(skT, pkT, blindedElement)
+
+                  evaluatedElement, proof
+                        <----------
+
+  output = Finalize(input, blind, evaluatedElement, blindedElement, pkT, proof)
+
+   In the following sections we describe modifications to the VOPRF
+   scheme in [I-D.irtf-cfrg-voprf] to be able to augment an existing
+   VOPRF with public metadata.
+
+3.2.  Main Key Generation
+
+   We augment the offline context setup phase phase of the VOPRF in
+   [I-D.irtf-cfrg-voprf].  In this phase, both the client and server
+   create a context used for executing the online phase of the protocol.
+
+   Prior to this phase, the key pair ("skM", "pkM") should be generated
+   from "MainKeyGen(n)", where "n" is the number of allowable metadata
+   bits.  This key pair is used as the main key for VOPRFs.  This main
+   key MUST NOT be used directly within the online VOPRF evaluation.
+   Public metadata is used to generate attribute specific keys that are
+   used in the VOPRF evaluation.
+
+   "MainKeyGen" samples "n" scalar elements "a0, a1, ... an" from the
+   group and a new generator "h". "ai" is a group element associated
+   with the "i"th bit of metadata.  Public parameters are calculated by
+   performing scalar multiplication of "h" with each "ai".
+
+   def MainKeyGen(n):
+       ais = []
+       his = []
+       h = GG.ScalarBaseMult(GG.RandomScalar())
+       a0 = GG.RandomScalar()
+       for i in range(n):
+           ai = GG.RandomScalar()
+           ais.append(ai)
+       for i in range(n):
+           hi = h * ais[i]
+           his.append(hi)
+       P0 = GG.ScalarBaseMult(a0)
+       skM = (a0, ais)
+       pkM = (GG.g, h, n, P0, his)
+       return (skM, pkM)
+
+3.3.  Public Key Generation
+
+   When client and server have agreed on the metadata "t" to use for the
+   protocol, the server first executes "PublicKeyGen(skM, t)" to
+   generate "skT" and the proof that "skT" is derived from "skM".  This
+   draft does not discuss how the client and server agree on the
+   metadata to use, and that is left to the application.
+
+   Note that "skM" has one group element for each bit of the metadata
+   "t", as well as the extra group element "a0".  Given metadata "t",
+   "PublicKeyGen" calculates the attribute specific key by performing a
+   scalar multiplication of all the group elements in "skM" for each bit
+   of "t" that is set to "1".
+
+   To prove that "skT" is derived from "skM", "GenerateProofs" generates
+   up to "n" proofs, one for each bit of the metadata.  Each proof
+   proves that "hi = ai * h" and "Pi = ai * Pi-1".  This proves that
+   "ai" was correctly used for bit "i".
+
+def PublicKeyGen(t, skM, pkM):
+    pis = []
+    pi = skM.a0
+    keyBits = len(t)
+    for i in range(keyBits):
+        if t[i] == 0:
+            pis.append(None)
+            continue
+        pi = pi * skM[i]
+        pis.append(pi)
+    skT = pi
+    pkT = GG.ScalarMultBase(skT)
+    pkProofs = GenerateProofs(t, pis, skM, pkM)
+    return (skT, pkT, pkProofs)
+
+def GenerateProofs(t, pis, skM, pkM):
+    proofs = []
+    previousPi = pkM.P0
+    for i in range(len(pis)):
+        if t[i] == 0:
+            continue
+        Pi = GG.ScalarBaseMult(pis[i])
+        proofi = GenerateProof(skM.ais[i], pkM.h, pkM.his[i], previousPi, Pi)
+        proofs.append((Pi, proofi))
+        previousPi = Pi
+    return proofs
+
+   Once "PublicKeyGen" has generated a public key for a set of "n" bits,
+   the client can verify that "skT" is derived from "skM", using
+   "PublicKeyVerify(pkM, pkT, pkProofs)".  This verifies the sequence of
+   discrete-log proofs generated by "PublicKeyGen".
+
+def PublicKeyVerify(pkM, pkT, t, pkProofs):
+    previousPi = pkM.P0
+    proofVerified = True
+    for proof in pkProofs:
+        if t[i] == 0:
+            continue
+        Pi = proof.Pi
+        verified = VerifyProof(pkM.h, pkM.his[i], previousPi, Pi, proof)
+        proofVerified = proofVerified & verified
+        previousPi = Pi
+    return proofVerified
+
+   A server can use "skT" generated from "PublicKeyGen" as the private
+   key for the VOPRF mechanism in [I-D.irtf-cfrg-voprf].
+
+4.  Application considerations
+
+4.1.  Metadata bits
+
+   Applications must choose the maximum size in bits of the metadata
+   that they would like to support before setup of the protocol.  The
+   size of the metadata impacts the following - Size of the public key -
+   Computation time for attribute and proof generation
+
+   For "b" being the number of metadata values needed for an
+   application, the size of the public key scales as "O(log b)".
+   Computation also scales as "O(log b)" number of scalar
+   multiplications for generating a public key and number of discrete
+   log proof generations and verifications required.
+
+4.2.  Encoding metadata
+
+   Applications must choose the number of bits of metadata required in
+   order to be able to represent all possible values for the
+   application's metadata.  They MUST define their own mechanism encode
+   metadata into bits.
+
+5.  Comparison with other approaches
+
+5.1.  Pairings
+
+   It is possible to construct VOPRFs with public metadata using
+   pairing-friendly curves [I-D.draft-irtf-cfrg-pairing-friendly-curves]
+   with an approach in [Pythia15].
+
+   However this approach has some disadvantages.  Pairings are not
+   widely available in cryptographic libraries and are also not
+   compatible with existing deployed VOPRFs like in
+   [I-D.irtf-cfrg-voprf].  The approach described here allows
+   applications to use existing deployed VOPRFs while only changing the
+   mechanism of key derivation.
+
+5.2.  Partially oblivious PRF
+
+   Another approach that could be used to bind metadata to a VOPRF
+   evaluation is to use a similar method in [pOPRF18] which uses a
+   regular "PRF(k, metadata)" to derive a secret key based on the
+   metadata which is then used in the VOPRF.
+
+   The verifiability of public key could be achieved by publishing every
+   public key for each metadata value in a central repository, which
+   could be checked by the client.  For large number of values of
+   metadata "b", this approach generates "O(b)" keys, which can be
+   difficult for clients and servers to manage.  In contrast, the
+   approach described in this document, the size of the main public key
+   is "O(log b)", and the public keys of each attribute can be verified
+   against the main key later.
+
+6.  Security Considerations
+
+6.1.  Cryptographic security
+
+   The security properties of a VOPRF with public metadata are derived
+   from the proof in [PrivateStats] that the VOPRF defined here is a PRF
+   even after giving an adversary access to proofs from "PublicKeyGen".
+   The VOPRF defined in [I-D.irtf-cfrg-voprf] when combined with
+   attributes results in a PRF output of "PRF(skM, t, x) = a0^t1 * a1^t2
+   ... * an^tn * H(x)".
+
+6.1.1.  n-Diffie Hellman exponent assumption
+
+   There are several variants of the Diffie-Hellman assumption and the
+   proof of the VOPRF with public metadata is based on the n-Diffie
+   Hellman exponent assumption.  The n-DHE problem requires an adversary
+   to distinguish the n+1-th power of a secret "a" hidden in the
+   exponent from a random element in "GG".
+
+   Sample uniformly at random "d" in {0,1}, and a random "r" from
+   "GF(p)": - Given "G" is a generator in "GG" - Given "G", "a * G" ,
+   "(a^2) * G", ..., "(a^n) * G" - if "d" == 0: "C = a^(n+1) * G" else:
+   "C = r * a"
+
+   Output "d' == d"
+
+6.1.2.  Selective security vs full security
+
+   The security properties of the VOPRF with public metadata described
+   in this draft is based on the proof in [PrivateStats] that the VOPRF
+   is a selectively-secure VRF.  Selective-security is a weaker notion
+   of security that requires an adversary to commit to the challenge
+   input (in this case, the metadata and value x) before trying to break
+   the PRF.
+
+   In practice, if target inputs are independent of the system
+   parameters, there should not be an advantage to allowing the attacker
+   to choose the target after seeing system parameters.  To convert our
+   VOPRF with public metadata to one satisfying a full security notion
+   in the random oracle model, we require that the metadata be hashed
+   with a collision-resistant hash function with sufficiently large
+   output (>=256-bits).  For smaller metadata sets therefore, the
+   selectively-secure VRF is much more efficient.
+
+7.  IANA Considerations
+
+   This document has no IANA actions.
+
+8.  References
+
+8.1.  Normative References
+
+   [I-D.draft-irtf-cfrg-pairing-friendly-curves]
+              Sakemi, Y., Kobayashi, T., Saito, T., and R. S. Wahby,
+              "Pairing-Friendly Curves", Work in Progress, Internet-
+              Draft, draft-irtf-cfrg-pairing-friendly-curves-09, 16
+              November 2020, <https://datatracker.ietf.org/doc/html/
+              draft-irtf-cfrg-pairing-friendly-curves-09.txt>.
+
+   [I-D.irtf-cfrg-voprf]
+              Davidson, A., Faz-Hernandez, A., Sullivan, N., and C. A.
+              Wood, "Oblivious Pseudorandom Functions (OPRFs) using
+              Prime-Order Groups", Work in Progress, Internet-Draft,
+              draft-irtf-cfrg-voprf-06, 21 February 2021,
+              <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
+              voprf-06.txt>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://datatracker.ietf.org/doc/html/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://datatracker.ietf.org/doc/html/rfc8174>.
+
+8.2.  Informative References
+
+   [Camenisch97]
+              "Proof Systems for General Statements about Discrete
+              Logarithms",
+              <https://crypto.ethz.ch/publications/files/CamSta97b.pdf>.
+
+   [pOPRF18]  "Threshold Partially-Oblivious PRFs with Applications to
+              Key Management", <https://eprint.iacr.org/2018/733>.
+
+   [PrivateStats]
+              "PrivateStats, De-Identified Authenticated Logging at
+              Scale", <https://research.fb.com/privatestats>.
+
+   [Pythia15] "The Pythia PRF Service",
+              <https://eprint.iacr.org/2015/644.pdf>.
+
+Appendix A.  Acknowledgments
+
+   The editors of this document thank all authors of the [PrivateStats]
+   work, where the construction was originally described.
+
+Authors' Addresses
+
+   Subodh Iyengar
+   Facebook
+
+   Email: subodh@fb.com
+
+
+   Ananth Raghunathan
+   Facebook
+
+   Email: ananthr@fb.com
+
+
+   Christopher A. Wood
+   Cloudflare
+
+   Email: caw@heapingbits.net
