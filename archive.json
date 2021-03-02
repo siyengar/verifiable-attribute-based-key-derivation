@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-02-28T00:35:32.073789+00:00",
+  "timestamp": "2021-03-02T00:28:20.315656+00:00",
   "repo": "siyengar/voprf-with-metadata",
   "labels": [
     {
@@ -50,5 +50,48 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTgxNjg0OTc1",
+      "title": "Align with draft-irtf-cfrg-voprf.",
+      "url": "https://github.com/siyengar/voprf-with-metadata/pull/1",
+      "state": "MERGED",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I tried to reuse as much as possible from the underlying draft to demonstrate that this is a lovely extension built on top. I dropped the DLEQ proof generation/verification functions in the process, but I believe we can use those in draft-irtf-cfrg-voprf out of the box. (This has the benefit of not duplicating domain separation steps.) Please double check this part! ",
+      "createdAt": "2021-03-01T03:34:00Z",
+      "updatedAt": "2021-03-01T21:42:12Z",
+      "baseRepository": "siyengar/voprf-with-metadata",
+      "baseRefName": "master",
+      "baseRefOid": "d5ecba9533f235fb16b5af42b510a6a4a0913890",
+      "headRepository": "siyengar/voprf-with-metadata",
+      "headRefName": "caw/align-with-voprf",
+      "headRefOid": "82a2398e33149d713c918dfbbffe0d8fd39a1bda",
+      "closedAt": "2021-03-01T21:42:12Z",
+      "mergedAt": "2021-03-01T21:42:12Z",
+      "mergedBy": "siyengar",
+      "mergeCommit": {
+        "oid": "09cb1e384579ed928b94f812611ea8665f09dd51"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NjAxMTgzODcx",
+          "commit": {
+            "abbreviatedOid": "82a2398"
+          },
+          "author": "siyengar",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "lgtm, do you want to add yourself as editor?",
+          "createdAt": "2021-03-01T21:30:12Z",
+          "updatedAt": "2021-03-01T21:30:12Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
