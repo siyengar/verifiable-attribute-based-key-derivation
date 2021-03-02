@@ -24,6 +24,11 @@ author:
     name: Ananth Raghunathan
     organization: Facebook
     email: ananthr@fb.com
+ -
+    ins: C. A. Wood
+    name: Christopher A. Wood
+    organization: Cloudflare
+    email: caw@heapingbits.net
 
 normative:
   RFC2119:
