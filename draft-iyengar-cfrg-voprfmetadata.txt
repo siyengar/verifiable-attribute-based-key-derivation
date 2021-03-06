@@ -5,7 +5,9 @@
 cfrg                                                          S. Iyengar
 Internet-Draft                                            A. Raghunathan
 Intended status: Informational                                  Facebook
-Expires: 2 September 2021                                   1 March 2021
+Expires: 7 September 2021                                      C.A. Wood
+                                                              Cloudflare
+                                                            6 March 2021
 
 
    Verifiable Oblivious Pseudo-Random Functions with Public Metadata
@@ -47,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2021.
+   This Internet-Draft will expire on 7 September 2021.
 
 Copyright Notice
 
@@ -482,3 +484,9 @@ Authors' Addresses
    Facebook
 
    Email: ananthr@fb.com
+
+
+   Christopher A. Wood
+   Cloudflare
+
+   Email: caw@heapingbits.net
