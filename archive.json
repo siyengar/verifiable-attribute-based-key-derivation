@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-03-04T00:33:46.038112+00:00",
+  "timestamp": "2021-03-07T00:36:20.388104+00:00",
   "repo": "siyengar/voprf-with-metadata",
   "labels": [
     {
@@ -92,6 +92,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTg1OTcyMTM1",
+      "title": "Add self as author.",
+      "url": "https://github.com/siyengar/voprf-with-metadata/pull/2",
+      "state": "MERGED",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-03-06T01:33:27Z",
+      "updatedAt": "2021-03-06T02:01:09Z",
+      "baseRepository": "siyengar/voprf-with-metadata",
+      "baseRefName": "master",
+      "baseRefOid": "09cb1e384579ed928b94f812611ea8665f09dd51",
+      "headRepository": "siyengar/voprf-with-metadata",
+      "headRefName": "caw/hi",
+      "headRefOid": "ba1edbf60c58c62b0aadd735dd568ec34c8aa57a",
+      "closedAt": "2021-03-06T02:01:08Z",
+      "mergedAt": "2021-03-06T02:01:08Z",
+      "mergedBy": "siyengar",
+      "mergeCommit": {
+        "oid": "8cf97ebebc197638fdb0f9b406e999598c6143c4"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
