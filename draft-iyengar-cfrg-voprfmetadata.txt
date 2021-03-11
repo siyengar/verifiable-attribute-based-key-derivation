@@ -5,9 +5,9 @@
 cfrg                                                          S. Iyengar
 Internet-Draft                                            A. Raghunathan
 Intended status: Informational                                  Facebook
-Expires: 7 September 2021                                      C.A. Wood
+Expires: 12 September 2021                                     C.A. Wood
                                                               Cloudflare
-                                                            6 March 2021
+                                                           11 March 2021
 
 
    Verifiable Oblivious Pseudo-Random Functions with Public Metadata
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 September 2021.
+   This Internet-Draft will expire on 12 September 2021.
 
 Copyright Notice
 
@@ -235,8 +235,8 @@ Table of Contents
    used in the VOPRF evaluation.
 
    "MainKeyGen" samples "n" scalar elements "a0, a1, ... an" from the
-   group and a new generator "h". "ai" is a group element associated
-   with the "i"th bit of metadata.  Public parameters are calculated by
+   "GF(p)" and a new generator "h". "ai" is a scalar associated with the
+   "i"th bit of metadata.  Public parameters are calculated by
    performing scalar multiplication of "h" with each "ai".
 
    def MainKeyGen(n):
@@ -263,11 +263,11 @@ Table of Contents
    draft does not discuss how the client and server agree on the
    metadata to use, and that is left to the application.
 
-   Note that "skM" has one group element for each bit of the metadata
-   "t", as well as the extra group element "a0".  Given metadata "t",
-   "PublicKeyGen" calculates the attribute specific key by performing a
-   scalar multiplication of all the group elements in "skM" for each bit
-   of "t" that is set to "1".
+   Note that "skM" has one scalar "ai" for each bit of the metadata "t",
+   as well as the extra scalar "a0".  Given metadata "t", "PublicKeyGen"
+   calculates the attribute specific key by performing a scalar
+   multiplication of all the scalars elements in "skM" for each bit of
+   "t" that is set to "1".
 
    To prove that "skT" is derived from "skM", "GenerateProofs" generates
    up to "n" proofs, one for each bit of the metadata.  Each proof
@@ -394,9 +394,13 @@ def PublicKeyVerify(pkM, pkT, t, pkProofs):
    exponent from a random element in "GG".
 
    Sample uniformly at random "d" in {0,1}, and a random "r" from
-   "GF(p)": - Given "G" is a generator in "GG" - Given "G", "a * G" ,
-   "(a^2) * G", ..., "(a^n) * G" - if "d" == 0: "C = a^(n+1) * G" else:
-   "C = r * a"
+   "GF(p)":
+
+   *  Given "G" is a generator in "GG"
+
+   *  Given "G", "a * G" , "(a^2) * G", ..., "(a^n) * G"
+
+   *  if "d" == 0: "C = a^(n+1) * G" else: "C = r * a"
 
    Output "d' == d"
 
