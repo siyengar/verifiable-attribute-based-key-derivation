@@ -200,8 +200,8 @@ key pair is used as the main key for VOPRFs.  This main key MUST NOT be used
 directly within the online VOPRF evaluation. Public metadata is used to generate
 attribute specific keys that are used in the VOPRF evaluation.
 
-`MainKeyGen` samples `n` scalar elements `a0, a1, ... an` from the group and a
-new generator `h`. `ai` is a group element associated with the `i`th bit of
+`MainKeyGen` samples `n` scalar elements `a0, a1, ... an` from the `GF(p)` and a
+new generator `h`. `ai` is a scalar associated with the `i`th bit of
 metadata.  Public parameters are calculated by performing scalar multiplication
 of `h` with each `ai`.
 
@@ -231,9 +231,9 @@ the proof that `skT` is derived from `skM`.  This draft does not discuss how the
 client and server agree on the metadata to use, and that is left to the
 application.
 
-Note that `skM` has one group element for each bit of the metadata `t`, as well
-as the extra group element `a0`. Given metadata `t`, `PublicKeyGen` calculates the
-attribute specific key by performing a scalar multiplication of all the group
+Note that `skM` has one scalar `ai` for each bit of the metadata `t`, as well
+as the extra scalar `a0`. Given metadata `t`, `PublicKeyGen` calculates the
+attribute specific key by performing a scalar multiplication of all the scalars
 elements in `skM` for each bit of `t` that is set to `1`.
 
 To prove that `skT` is derived from `skM`, `GenerateProofs` generates up to `n`
@@ -356,6 +356,7 @@ assumption. The n-DHE problem requires an adversary to distinguish the n+1-th
 power of a secret `a` hidden in the exponent from a random element in `GG`.
 
 Sample uniformly at random `d` in {0,1}, and a random `r` from `GF(p)`:
+
 - Given `G` is a generator in `GG`
 - Given `G`, `a * G` , `(a^2) * G`, ..., `(a^n) * G`
 - if `d` == 0: `C = a^(n+1) * G` else: `C = r * a`
