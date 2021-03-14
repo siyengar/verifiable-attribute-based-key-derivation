@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2021-03-11T00:34:34.855342+00:00",
+  "timestamp": "2021-03-14T00:36:44.151912+00:00",
   "repo": "siyengar/voprf-with-metadata",
   "labels": [
     {
@@ -49,7 +49,32 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 3,
+      "id": "MDU6SXNzdWU4MzAxNTk1NTQ=",
+      "title": "Generalize key derivation mechanism",
+      "url": "https://github.com/siyengar/voprf-with-metadata/issues/3",
+      "state": "OPEN",
+      "author": "chris-wood",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "During today's CFRG meeting, @fredericjacobs suggested that generalizing the key derivation mechanism in this document would allow it to be used for other protocols that use these keys. For example, you could use it to build partially oblivious blind Schnorr signature schemes! I think this is a great idea, even if it slightly changes the framing of the draft. \r\n\r\n@siyengar, @ananthr, what do you think?",
+      "createdAt": "2021-03-12T14:15:45Z",
+      "updatedAt": "2021-03-12T14:19:17Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "FredericJacobs",
+          "authorAssociation": "NONE",
+          "body": "Thanks Chris for filling it. \r\n\r\nIndeed, having a generic construction for key augmentation with public metadata would be great idea.\r\n\r\nA similar concept is used to augment RSA Keys for partially-blind signature schemes (see https://github.com/chris-wood/draft-wood-cfrg-blind-signatures/issues/29).\r\n\r\nHaving it defined in a more generic way, might also help the development of partially-blind EC signature schemes.",
+          "createdAt": "2021-03-12T14:19:17Z",
+          "updatedAt": "2021-03-12T14:19:17Z"
+        }
+      ]
+    }
+  ],
   "pulls": [
     {
       "number": 1,
